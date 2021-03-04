@@ -1,0 +1,382 @@
+<script
+	type="application/json"
+	data-section-type="static-collection"
+	data-section-id="{{ section.id }}"
+	data-section-data
+	>
+	{
+		"context": {
+			"see_more": {{ 'general.general.see_more' | t | json }},
+			"see_less": {{ 'general.general.see_less' | t | json }},
+			"grid_list": {{ section.settings.default_view | json }},
+			"collectionUrl": {{ collection.url | default: '/collections/all' | json }}
+		}
+	}
+</script>
+
+{% assign swatch_trigger = settings.swatches_swatch_trigger | strip | downcase %} 
+
+{% assign paginate_by = section.settings.products_per_page_range %}
+{% if template contains 'view-24' %}
+  	{% assign paginate_by = 24 %}
+{% elsif template contains 'view-36' %}
+  	{% assign paginate_by = 36 %}
+{% elsif template contains 'view-48' %}
+  	{% assign paginate_by = 48 %}
+{% endif %}
+
+{% paginate collection.products by paginate_by %}
+	<div class="productgrid--outer layout--has-sidebar">
+		<div class="productgrid--sidebar">
+			<div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-desktop>
+          		{% comment %} Include placeholder template {% endcomment %}
+				{% include 'boost-pfs-filter-skeleton', type: 'filter-tree' %}
+          	</div>
+		</div>
+
+		<div class="productgrid--wrapper">
+			{% include 'breadcrumbs' %}
+
+			<div class="productgrid--masthead">
+				{% if section.settings.show_collection_image and collection.image %}
+					<figure class="collection--image">
+						{%
+							render 'rimg',
+							img: collection.image,
+							size: '1350x',
+							lazy: true,
+							canvas: true
+						%}
+					</figure>
+				{% endif %}
+
+				<div class="collection--information">
+					<h1 class="collection--title">
+						{{ collection.title }}
+					</h1>
+
+					{% if collection.description != blank %}
+						<div class="collection--description rte">
+						{{ collection.description }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<nav class="productgrid--utils productgrid--utils--visible-mobile" aria-label="{{ 'general.accessibility.nav_collection_utilities' | t }}">
+				{%- if section.settings.sort_by -%}
+					<div class="boost-pfs-filter-top-sorting productgrid--utils utils-sortby"></div>
+				{%- endif -%}
+
+				{%- if section.settings.show_by or section.settings.grid_list -%}
+				<div class="productgrid--utils utils-view {% if section.settings.grid_list == false %} utils-hide {% endif %}">
+					<div class="utils-view-container">
+					{%- if section.settings.show_by -%}
+						<ul class="boost-pfs-filter-top-show-limit utils-showby"></ul>
+					{%- endif -%}
+
+					{% if section.settings.grid_list %}
+						<div class="boost-pfs-filter-top-display-type utils-viewtoggle"></div>
+					{% endif %}
+					</div>
+				</div>
+				{%- endif -%}
+			</nav>
+
+			<div class="boost-pfs-filter-tree-mobile-button" ></div>
+			<div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-mobile></div>
+
+			<ul class="boost-pfs-filter-products productgrid--items products-per-row-{{- section.settings.products_per_row -}}" data-boost-sort="{{ collection.default_sort_by }}">
+				{% for product in collection.products %}
+					{%
+						render 'product-grid-item',
+						product: product
+					%}
+				{% endfor %}
+			</ul>
+
+			<div class="boost-pfs-filter-bottom-pagination">
+				{%
+					render 'pagination', paginate: paginate,
+					grid_list: true
+				%}
+			</div>
+			<div class="boost-pfs-filter-load-more"></div>
+		</div>
+	</div>
+{% endpaginate %}
+
+{% render 'quick-shop' %}
+
+<script>
+	// Declare boostPFSConfig variable
+	var boostPFSConfig = {
+		label: {
+			sorting: {% assign temp = 'collections.sorting.title' | t  %} {% unless temp contains 'translation missing'  %} {{ temp | json }} {% else %} "Sorting" {% endunless %},
+			sorting_best_selling: {% assign temp = collection.sort_options[1].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Best Selling" {% endunless %},
+			sorting_featured: {% assign temp = collection.sort_options[0].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Featured" {% endunless %},
+			sorting_title_ascending: {% assign temp = collection.sort_options[2].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Alphabetically, A-Z" {% endunless %},
+			sorting_title_descending: {% assign temp = collection.sort_options[3].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Alphabetically, Z-A" {% endunless %},
+			sorting_price_ascending: {% assign temp = collection.sort_options[4].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Lowest Price" {% endunless %},
+			sorting_price_descending: {% assign temp = collection.sort_options[5].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Highest Price" {% endunless %},
+			sorting_date_ascending: {% assign temp = collection.sort_options[6].name %} {% unless temp == nil  %} {{ temp | json }} {% else %} "Date, Old to New" {% endunless %},
+			sorting_date_descending: {% assign temp = collection.sort_options[7].name %} {% unless temp == nil  %} {{ temp | json }} {% else %} "Date, New to Old" {% endunless %},
+			sorting_relevance: {% assign temp = 'collections.sorting.relevance' | t %} {% unless temp contains 'translation missing'  %} {{ temp | json }} {% else %} "Relevance" {% endunless %},
+				
+			sale: {{ 'product.item.badges.sale' | t | json }},
+			sold_out: {{ 'product.item.badges.sold_out' | t | json }},  
+			prev: {{ 'general.pagination.prev' | t | json }},
+			next: {{ 'general.pagination.next' | t | json }},
+			show_per_page: {{ 'product_grid.show_per_page.title' | t | json }},
+			add_to_cart: {{ 'product.buttons.add_to_cart' | t | json }},
+			sold_out: {{ 'product.buttons.sold_out' | t | json }},
+			see_more: {{ 'general.general.see_more' | t | json }},
+			see_less: {{ 'general.general.see_less' | t | json }},
+			quick_look_text: {{ 'product.buttons.quick_shop' | t | json }},
+			quick_buy_text: {{ 'product.buttons.add_to_cart' | t | json }},
+			quick_choose_options: {{ 'product.buttons.choose_options' | t | json }},
+			sale_percentile_html: {{ 'product.item.badges.sale_percentile_html' | t | json }},
+			sale_money_html: {{ 'product.item.badges.sale_money_html' | t | json }},
+			range_html: {{ 'product.item.price.range_html' | t | json }},
+			view_details: {{ 'product.buttons.view_details' | t  | json }},
+			view_as_title: {{ 'product_grid.view_as.title' | t | json }},
+		},
+		custom: {
+			products_per_page: {% if paginate_by %} {{ paginate_by | json }} {% else %} 24 {% endif %},
+			emphasize_price: {% if settings.product_grid_emphasize_price != nil %} {{ settings.product_grid_emphasize_price | json }} {% else %} true {% endif %},
+			enable_quick_look: {% if settings.product_grid_quick_shop != nil %} {{ settings.product_grid_quick_shop | json }} {% else %} true {% endif %},
+			enable_quick_buy: {% if settings.product_grid_quick_buy != nil %} {{ settings.product_grid_quick_buy | json }} {% else %} true {% endif %},
+			swatches_enable: {% if settings.swatches_enable != nil %} {{ settings.swatches_enable | json }} {% else %} true {% endif %},
+			swatch_trigger: {% if swatch_trigger != nil and swatch_trigger != '' %} {{ swatch_trigger | json }} {% else %} "color" {% endif %},
+			swatches_shape: {% if settings.swatches_shape %} {{ settings.swatches_shape | json }} {% else %} "square" {% endif %},
+			swatches_option_style: {% if settings.swatches_option_style %} {{ settings.swatches_option_style | json }} {% else %} "color_swatch" {% endif %},
+			swatches_custom_colors: {% if settings.swatches_custom_colors %} {{ settings.swatches_custom_colors | json }} {% else %} "" {% endif %},
+			show_modal: {% if settings.product_grid_quick_shop != nil %} {{ settings.product_grid_quick_shop | json }} {% else %} true {% endif %},
+			product_grid_show_second_image: {% if settings.product_grid_show_second_image != nil %} {{ settings.product_grid_show_second_image | json }} {% else %} false {% endif %},
+			product_grid_image_style: {% if settings.product_grid_image_style != nil %} {{ settings.product_grid_image_style | json }} {% else %} "natural" {% endif %},
+			product_ratings_reviews: {% if settings.product_ratings_reviews != nil %} {{ settings.product_ratings_reviews | json }} {% else %} true {% endif %},
+			product_sales_badge: {% if settings.product_sales_badge != nil %} {{ settings.product_sales_badge | json  }} {% else %} true {% endif %},
+			product_sales_badge_style: {% if settings.product_sales_badge_style != nil %} {{ settings.product_sales_badge_style | json }} {% else %} "percentile" {% endif %},
+			show_vendor: {% if settings.product_show_vendor != nil %} {{ settings.product_show_vendor | json }} {% else %} false {% endif %},
+			cart_redirect: {% if settings.quickshop_product_cart_redirect  != nil %} {{ settings.quickshop_product_cart_redirect | json }} {% else %} false {% endif %},
+			money_format: {{ shop.money_format | json }},
+			atc_display: {% if settings.product_grid_show_atc %} {{ settings.product_grid_show_atc | json }} {% else %} '' {% endif %},
+			quick_shop_display: {% if settings.product_grid_show_quickshop %} {{ settings.product_grid_show_quickshop | json }} {% else %} '' {% endif %},
+			product_ratings_star_display: {% if settings.product_ratings_star_display %} {{ settings.product_ratings_star_display | json }} {% else %} '' {% endif %},
+			grid_list: {% if section.settings.grid_list %} {{ section.settings.grid_list | json }} {% else %} false {% endif %},
+			gallery_thumbnail_position: {% if settings.gallery_thumbnail_position %} {{ settings.gallery_thumbnail_position | json }} {% else %} '' {% endif %}
+		}
+	};
+</script>
+{% schema %}
+
+{
+  "name": "Collection pages",
+  "class": "collection--section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show collection image",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page_range",
+      "label": "Products per page",
+      "min": 24,
+      "max": 48,
+      "step": 12,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "header",
+      "content": "Utility bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "sort_by",
+      "label": "Show \"Sort by\" Dropdown",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_by",
+      "label": "Show products per page links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_list",
+      "label": "Show grid/list view toggle",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "default_view",
+      "label": "Default view",
+      "options": [
+        {
+          "label": "Grid",
+          "value": "grid-view"
+        },
+        {
+          "label": "List",
+          "value": "list-view"
+        }
+      ],
+      "default": "grid-view"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sidebar",
+      "label": "Show sidebar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prod_count",
+      "label": "Show product counts",
+      "info": "Only applies to collection links in sidebar menus",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_style",
+      "label": "Filters",
+      "info": "[Learn more](https://support.pixelunion.net/hc/en-us/articles/360026081933-Setting-up-product-tag-filters-in-Empire)",
+      "options": [
+        {
+          "value": "none",
+          "label": "Hide filters"
+        },
+        {
+          "value": "tags",
+          "label": "By tag"
+        },
+        {
+          "value": "groups",
+          "label": "By group"
+        }
+      ],
+      "default": "tags"
+    },
+    {
+      "id": "filter_limit",
+      "type": "select",
+      "label": "Hide additional tags after",
+      "options": [
+        {
+          "value": "5",
+          "label": "5 tags"
+        },
+        {
+          "value": "6",
+          "label": "6 tags"
+        },
+        {
+          "value": "8",
+          "label": "8 tags"
+        },
+        {
+          "value": "10",
+          "label": "10 tags"
+        },
+        {
+          "value": "15",
+          "label": "15 tags"
+        },
+        {
+          "value": "20",
+          "label": "20 tags"
+        },
+        {
+          "value": "999",
+          "label": "Show all tags"
+        }
+      ],
+      "default": "999"
+    },
+    {
+      "type": "select",
+      "id": "filter_position",
+      "label": "Filters position",
+      "options": [
+        {
+          "value": "above_menus",
+          "label": "Above menus"
+        },
+        {
+          "value": "below_menus",
+          "label": "Below menus"
+        }
+      ],
+      "default": "above_menus"
+    },
+    {
+      "type":      "text",
+      "id":        "grid_categories",
+      "label":     "Display filters as grid",
+      "info":      "List groups to display in an alternate grid format, like “Size, Price”. [Learn more](https://support.pixelunion.net/hc/en-us/articles/360026081933-Setting-up-product-tag-filters-in-Empire)"
+    },
+    {
+      "type":      "textarea",
+      "id":        "custom_ordered_categories",
+      "label":     "Group order",
+      "info":      "Define a custom order for groups, like “Color, Brand, Size”. Other groups will appear at the bottom."
+    },
+    {
+      "type":      "textarea",
+      "id":        "custom_ordered_tags",
+      "label":     "Tag order",
+      "info":      "Define a custom order for tags, like “Size_S, Size_M, Size_L”. Items must exactly match tag name, including group prefix. Other tags will appear at the bottom."
+    },
+    {
+      "type": "range",
+      "id": "menu_depth_range",
+      "label": "Menu depth visibility",
+      "info": "[Learn more](https://help.shopify.com/manual/sell-online/online-store/menus-and-links#create-a-drop-down-menu)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "id": "menu",
+          "type": "link_list",
+          "label": "Menu",
+          "info": "This menu will show as many dropdown items as specified in \"Menu depth visibility\"."
+        }
+      ],
+      "limit": 10
+    }
+  ]
+}
+
+{% endschema %}

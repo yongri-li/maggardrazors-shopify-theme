@@ -1,0 +1,195 @@
+<script
+	type="application/json"
+	data-section-type="static-search"
+	data-section-id="{{ section.id }}">
+</script>
+
+{% assign enable_content = section.settings.enable_search_articles_pages %}
+
+{% assign paginate_by = section.settings.results_per_page_range %}
+
+{% assign page_title = 'general.accessibility.search_results' | t: terms: sanitized_terms %}
+<div class="productgrid--outer boost-search-result-header">
+	<h1 class="boost-pfs-search-result-header"></h1>
+	<div class="productgrid--masthead">
+	{%
+		include 'page-search-form',
+		enable_content: enable_content
+	%}
+	</div>
+
+	<div class="boost-pfs-search-result-toolbar">
+		<div class="boost-pfs-search-result-item">
+			<ul class="boost-pfs-search-result-panel-controls">
+				<li>{% include 'boost-pfs-filter-skeleton', width: 2 %}</li>
+				<li>{% include 'boost-pfs-filter-skeleton', width: 2 %}</li>
+				<li>{% include 'boost-pfs-filter-skeleton', width: 1 %}</li>
+			</ul>
+		</div>
+		<div class="boost-pfs-search-result-item">
+			<span class="boost-pfs-search-total-result">
+				{% include 'boost-pfs-filter-skeleton', width: 2 %}
+			</span>
+		</div>
+	</div>
+</div>
+
+<div class="productgrid--outer layout--has-sidebar boost-pfs-search-panel-product-show">
+	<div class="productgrid--sidebar">
+		<div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-desktop>
+			{% comment %} Include placeholder template {% endcomment %}
+			{% include 'boost-pfs-filter-skeleton', type: 'filter-tree' %}
+		</div>
+	</div>
+	<div class="productgrid--wrapper">
+		{% comment %} Remove margin of filter toolbar {% endcomment %}
+		<div style="margin-bottom: -1.75rem"></div>
+		<nav class="productgrid--utils productgrid--utils--visible-mobile" aria-label="{{ 'general.accessibility.nav_collection_utilities' | t }}">
+			<div class="boost-pfs-filter-top-sorting productgrid--utils utils-sortby"></div>
+
+			<div class="productgrid--utils utils-view {% if section.settings.grid_list == false %} utils-hide {% endif %}">
+				<div class="utils-view-container">
+					<ul class="boost-pfs-filter-top-show-limit utils-showby"></ul>
+					<div class="boost-pfs-filter-top-display-type utils-viewtoggle"></div>
+				</div>
+			</div>
+		</nav>
+		<div class="boost-pfs-filter-tree-mobile-button" ></div>
+		<div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" data-is-mobile></div>
+		<ul class="boost-pfs-filter-products productgrid--items products-per-row-{{- section.settings.products_per_row -}}" data-boost-sort="{{ collection.default_sort_by }}">
+			{% comment %} Fix Shopify search term report {% endcomment %}
+			{% paginate search.results by 2 %}
+			{% if search.performed %}
+				{% for item in search.results %}
+					<div class="productgrid--items" style="display: none !important"></div>
+				{% endfor %}
+			{% endif %}
+			{% endpaginate %}
+		</ul>
+		<div class="boost-pfs-filter-bottom-pagination"></div>
+		<div class="boost-pfs-filter-load-more"></div>
+	</div>
+</div>
+
+<div class="productgrid--outer">
+	<div class="boost-pfs-search-result-wrap boost-hidden">
+		<div class="boost-pfs-search-result-collections">
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 3 %}</a></div>
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+		</div>
+		<div class="boost-pfs-search-result-collection-pagination pagination">{% include 'boost-pfs-filter-skeleton', width: 4 %}</div>
+	</div>
+	<div class="boost-pfs-search-result-wrap boost-hidden">
+		<div class="boost-pfs-search-result-pages">
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 3 %}</a></div>
+			<div class="boost-pfs-search-result-list-item"><a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a></div>
+		</div>
+		<div class="boost-pfs-search-result-page-pagination pagination">{% include 'boost-pfs-filter-skeleton', width: 4 %}</div>
+	</div>
+</div>
+
+{% render 'quick-shop' %}
+
+<script>
+	// Declare boostPFSConfig variable
+	var boostPFSConfig = {
+		label: {
+			sorting: {% assign temp = 'collections.sorting.title' | t  %} {% unless temp contains 'translation missing'  %} {{ temp | json }} {% else %} "Sorting" {% endunless %},
+			sorting_best_selling: {% assign temp = collection.sort_options[1].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Best Selling" {% endunless %},
+			sorting_featured: {% assign temp = collection.sort_options[0].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Featured" {% endunless %},
+			sorting_title_ascending: {% assign temp = collection.sort_options[2].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Alphabetically, A-Z" {% endunless %},
+			sorting_title_descending: {% assign temp = collection.sort_options[3].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Alphabetically, Z-A" {% endunless %},
+			sorting_price_ascending: {% assign temp = collection.sort_options[4].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Lowest Price" {% endunless %},
+			sorting_price_descending: {% assign temp = collection.sort_options[5].name %} {% unless temp == nil %} {{ temp | json }} {% else %} "Highest Price" {% endunless %},
+			sorting_date_ascending: {% assign temp = collection.sort_options[6].name %} {% unless temp == nil  %} {{ temp | json }} {% else %} "Date, Old to New" {% endunless %},
+			sorting_date_descending: {% assign temp = collection.sort_options[7].name %} {% unless temp == nil  %} {{ temp | json }} {% else %} "Date, New to Old" {% endunless %},
+			sorting_relevance: {% assign temp = 'collections.sorting.relevance' | t %} {% unless temp contains 'translation missing'  %} {{ temp | json }} {% else %} "Relevance" {% endunless %},
+				
+			sale: {{ 'product.item.badges.sale' | t | json }},
+			sold_out: {{ 'product.item.badges.sold_out' | t | json }},  
+			prev: {{ 'general.pagination.prev' | t | json }},
+			next: {{ 'general.pagination.next' | t | json }},
+			show_per_page: {{ 'product_grid.show_per_page.title' | t | json }},
+			add_to_cart: {{ 'product.buttons.add_to_cart' | t | json }},
+			sold_out: {{ 'product.buttons.sold_out' | t | json }},
+			see_more: {{ 'general.general.see_more' | t | json }},
+			see_less: {{ 'general.general.see_less' | t | json }},
+			quick_look_text: {{ 'product.buttons.quick_shop' | t | json }},
+			quick_buy_text: {{ 'product.buttons.add_to_cart' | t | json }},
+			quick_choose_options: {{ 'product.buttons.choose_options' | t | json }},
+			sale_percentile_html: {{ 'product.item.badges.sale_percentile_html' | t | json }},
+			sale_money_html: {{ 'product.item.badges.sale_money_html' | t | json }},
+			range_html: {{ 'product.item.price.range_html' | t | json }},
+			view_details: {{ 'product.buttons.view_details' | t  | json }},
+			view_as_title: {{ 'product_grid.view_as.title' | t | json }},
+		},
+		custom: {
+			products_per_page: {% if paginate_by %} {{ paginate_by | json }} {% else %} 24 {% endif %},
+			emphasize_price: {% if settings.product_grid_emphasize_price != nil %} {{ settings.product_grid_emphasize_price | json }} {% else %} true {% endif %},
+			enable_quick_look: {% if settings.product_grid_quick_shop != nil %} {{ settings.product_grid_quick_shop | json }} {% else %} true {% endif %},
+			enable_quick_buy: {% if settings.product_grid_quick_buy != nil %} {{ settings.product_grid_quick_buy | json }} {% else %} true {% endif %},
+			swatches_enable: {% if settings.swatches_enable != nil %} {{ settings.swatches_enable | json }} {% else %} true {% endif %},
+			swatch_trigger: {% if swatch_trigger != nil and swatch_trigger != '' %} {{ swatch_trigger | json }} {% else %} "color" {% endif %},
+			swatches_shape: {% if settings.swatches_shape %} {{ settings.swatches_shape | json }} {% else %} "square" {% endif %},
+			swatches_option_style: {% if settings.swatches_option_style %} {{ settings.swatches_option_style | json }} {% else %} "color_swatch" {% endif %},
+			swatches_custom_colors: {% if settings.swatches_custom_colors %} {{ settings.swatches_custom_colors | json }} {% else %} "" {% endif %},
+			show_modal: {% if settings.product_grid_quick_shop != nil %} {{ settings.product_grid_quick_shop | json }} {% else %} true {% endif %},
+			product_grid_show_second_image: {% if settings.product_grid_show_second_image != nil %} {{ settings.product_grid_show_second_image | json }} {% else %} false {% endif %},
+			product_grid_image_style: {% if settings.product_grid_image_style != nil %} {{ settings.product_grid_image_style | json }} {% else %} "natural" {% endif %},
+			product_ratings_reviews: {% if settings.product_ratings_reviews != nil %} {{ settings.product_ratings_reviews | json }} {% else %} true {% endif %},
+			product_sales_badge: {% if settings.product_sales_badge != nil %} {{ settings.product_sales_badge | json  }} {% else %} true {% endif %},
+			product_sales_badge_style: {% if settings.product_sales_badge_style != nil %} {{ settings.product_sales_badge_style | json }} {% else %} "percentile" {% endif %},
+			show_vendor: {% if settings.product_show_vendor != nil %} {{ settings.product_show_vendor | json }} {% else %} false {% endif %},
+			cart_redirect: {% if settings.quickshop_product_cart_redirect  != nil %} {{ settings.quickshop_product_cart_redirect | json }} {% else %} false {% endif %},
+			money_format: {{ shop.money_format | json }},
+			atc_display: {% if settings.product_grid_show_atc %} {{ settings.product_grid_show_atc | json }} {% else %} '' {% endif %},
+			quick_shop_display: {% if settings.product_grid_show_quickshop %} {{ settings.product_grid_show_quickshop | json }} {% else %} '' {% endif %},
+			product_ratings_star_display: {% if settings.product_ratings_star_display %} {{ settings.product_ratings_star_display | json }} {% else %} '' {% endif %},
+			grid_list: {% if section.settings.grid_list %} {{ section.settings.grid_list | json }} {% else %} false {% endif %},
+			gallery_thumbnail_position: {% if settings.gallery_thumbnail_position %} {{ settings.gallery_thumbnail_position | json }} {% else %} '' {% endif %}
+		}
+	};
+</script>
+{% schema %}
+
+{
+  "name": "Search results",
+  "class": "search--section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "results_per_page_range",
+      "label": "Results per page",
+      "min": 24,
+      "max": 48,
+      "step": 12,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "id": "enable_search_articles_pages",
+      "type": "checkbox",
+      "label": "Show blog posts and pages in search results",
+      "default": true
+    }
+  ]
+}
+
+{% endschema %}
