@@ -1,0 +1,9 @@
+development:
+  password: <api_password>
+  theme_id: <theme_id>
+  store: <store>.myshopify.com
+  timeout: "60s"
+  directory: ./theme/
+  ignore_files:
+    - theme/config/settings_data.json
+    - src/*
