@@ -1,0 +1,174 @@
+{% comment %}
+  @param layout {String}
+    Layout type
+
+  @param is_product_modal {Bool}
+    Is the snippet being loaded in a QuickShop
+
+  @param hide_description {Bool}
+    If true, hide the product description
+
+  @param gallery_aspect_ratio {string}
+    This is the gallery aspect ratio, can be one of 'natural', 'short', 'square', 'long'
+
+  @param gallery_thumbnail_position {string}
+    This is the gallery thumbnail position, can be one of 'below', or 'left'
+
+  @param gallery_image_crop {boolean}
+    Whether to crop images
+
+  @param gallery_hover_zoom {String}
+    This is the hover zoom setting, which is either 'disabled', 'separate', or 'replace'
+
+  @param gallery_click_to_zoom {String}
+    This is the click to zoom setting, which is either 'disabled', 'mobile', 'desktop', or 'always'
+{% endcomment %}
+
+{% assign onboarding = onboarding | default: false %}
+{% assign layout = layout | default: nil %}
+{% assign hide_description = hide_description | default: false %}
+
+{% assign enable_social_sharing = settings.product_social_sharing %}
+{% assign selected_variant = product.selected_or_first_available_variant %}
+{% assign compare_at_price = selected_variant.compare_at_price %}
+{% assign price = selected_variant.price %}
+{% assign sku = selected_variant.sku %}
+{% assign product_available = product.available %}
+
+{% comment %}For a potential divider in the product.description we need to split the content{% endcomment %}
+{% assign readmore_split = product.description | split: '<!-- more -->' %}
+
+{% if onboarding %}
+  {% assign compare_at_price = 2999 %}
+  {% assign price = 1999 %}
+{% endif %}
+
+{% assign on_sale = false %}
+{% if compare_at_price > price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign consistent_saved = false %}
+{% capture consistent_savings %}
+  {%
+    render 'consistent-savings',
+    variants: product.variants,
+    on_sale: on_sale
+  %}
+{% endcapture %}
+{% if consistent_savings contains 'true' %}
+  {% assign consistent_saved = true %}
+{% endif %}
+
+
+{%- capture share_buttons -%}
+  {% assign social_image = false %}
+  {% if product.featured_image %}
+    {% assign social_image = product.featured_image | img_url: '1024x' %}
+  {% endif %}
+  {% assign social_url = shop.url | append: product.url %}
+  {%-
+    render 'share-buttons',
+    snippet_title: 'general.share_buttons.title',
+    social_image: social_image,
+    social_title: product.title,
+    social_url: social_url
+  -%}
+{%- endcapture  -%}
+
+<article class="product--outer">
+  {% comment %}
+    Product slideshow, never moves
+  {% endcomment %}
+  {%
+    render 'product-gallery',
+    product: product,
+    aspect_ratio: gallery_aspect_ratio,
+    thumbnail_position: gallery_thumbnail_position,
+    image_crop: gallery_image_crop,
+    click_to_zoom: gallery_click_to_zoom,
+    hover_zoom: gallery_hover_zoom
+  %}
+  <div class="product-main">
+    <div class="product-details" data-product-details data-product-variant-id={{product.first_available_variant.id}}>
+      <h2 class="product-bundle-title">
+        {{ product.title }}
+      </h2> 
+      <div class="product-bundle-price">
+        {{ product.price | money }}
+      </div>
+      <div class="product-bundle-description">
+        {{ product.description }}
+      </div>
+      <div class="products-select-box">
+        {% assign product_bundle_metafields = product.metafields.global.bundle_proudct_handles | split: "," %}
+        {% assign product_bundle_metafields_required = product.metafields.global.bundle_product_required | split: "," %}
+        {% for product_metafield in product_bundle_metafields %}
+          <div class="product_bundle_items">
+              {% assign product_bundle_item = all_products[product_metafield] %}
+              {% if forloop.index > 1 %}
+              {% assign product_bundle_header_class = 'product_bundle_items_header_disable_no_active' %}
+              {% assign product_bundle_wrap_class = 'product_bundle_wrap_hide' %}
+              {% else %}
+              {% assign product_bundle_header_class = 'product_bundle_items_header_active' %}
+              {% assign product_bundle_wrap_class = '' %}
+              {% endif %}  
+
+              <div class="product_bundle_items_header {{product_bundle_header_class}}">
+                <span class="product_bundle_items_title">Select</span>
+                <span class="product_bundle_items_variants">Step {{forloop.index}}: {{product_bundle_item.title}}</span>
+              </div>
+              <div class="product_bundle_wrap {{product_bundle_wrap_class}}">
+                <div class="product_bundle_items_variants">
+                  {% if product_bundle_item.has_only_default_variant %}
+                    <div class="product_bundle_varient"  data-product-variant-id="{{product_bundle_item.first_available_variant.id}}" data-discount-percent="{{ product_bundle_item.first_available_variant.metafields.bundle.discount_percent }}" data-discount-fixed="{{ product_bundle_item.first_available_variant.metafields.bundle.discount_fixed }}"  data-product-name="{{product_bundle_item.title}}" data-product-price={{product_bundle_item.price}}>
+                      <img src="{{product_bundle_item.featured_image | img_url : '100x'}}"/>
+                      <span class="product_bundle_variant_title">{{product_bundle_item.title}}</span>
+                      <span class="product_bundle_variant_price">{{product_bundle_item.price | money }}</span>                    
+                    </div>
+                    
+                  {% else %}
+                    {% for product_bundle_variant in product_bundle_item.variants %}
+                      <div class="product_bundle_varient" data-product-variant-id="{{product_bundle_variant.id}}" data-discount-percent="{{ product_bundle_variant.metafields.bundle.discount_percent }}" data-discount-fixed="{{ product_bundle_variant.metafields.bundle.discount_fixed }}" data-product-name="{{product_bundle_item.title}}" data-product-price={{product_bundle_variant.price}}>
+                        <img src="{{product_bundle_variant.image | img_url : '100x'}}"/>
+                        <span class="product_bundle_variant_title">{{product_bundle_variant.title}}</span>
+                        <span class="product_bundle_variant_price">{{product_bundle_variant.price | money }}</span>                    
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                {% if product_bundle_metafields.size == forloop.index %}
+                {% assign last_element = 'last-bundle--mark' %}
+                {% else %}
+                {% assign last_element = 'last-not-bundle' %}
+                {% endif %}
+                <div class="product-select-actions">
+                  {% assign index_num = forloop.index | minus: 1  %}
+                  {% assign requied_bundle_product = product_bundle_metafields_required[index_num] %}                  
+                    <button type="button" class="btn select-continue-btn select-continue-btn-disable {{last_element}} requied_{{requied_bundle_product}}" disabled>CONTINUE</button>
+                  {% if requied_bundle_product == "0" %}                    
+                    <button type="button" class="btn select-not-need-btn {{last_element}} requied_{{requied_bundle_product}}">DON'T NEED</button>
+                  {% endif %}
+                  
+                </div>
+              </div>              
+          </div>
+        {% endfor %}
+        <div class="product_select_results product_select_results_hide">
+          <div class="product_bundle_review_header">
+            <span class="product_bundle_review_label">Review</span>
+            <span class="product_bundle_review_content">KIT PICKS</span>
+          </div>
+          <div class="product_bundle_reviews"></div>
+        </div>
+        <div class="product_bundle_cart_box product_bundle_add_cart_box_hide">
+          <div class="product_bundle_add_cart">
+            <input type="number" class="product_bundle_quantity" value="1"/>
+            <button class="btn select-continue-btn product_bundle_cart_btn">Add Cart</button>
+          </div>
+        </div>        
+      </div>
+    </div>
+  </div>
+</article>
+
