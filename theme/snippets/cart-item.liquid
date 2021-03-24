@@ -12,6 +12,7 @@
   {%- assign item_has_discounts = true -%}
 {%- endif -%}
 
+
 <li
   class="cart-item"
   data-cartitem
@@ -111,19 +112,30 @@
       {% endif %}
     </div>
 
-    <div class="cart-item--info">
+    
+    {% assign is_bundlemaster = false %}
+    {% assign is_bundleslave = false %}
+    {% assign bundle_ts = item.properties['_bundle_ts'] %}
+    {% if item.properties['_bundle_master'] == 'true' %}          
+      {% assign is_bundlemaster = true %}
+    {% endif %}
+    {% if item.properties['_bundle_slave'] == 'true' %}
+      {% assign is_bundleslave = true %}
+    {% endif %}
+
+    <div class="cart-item--info">      
       <div
         class="cart-item--quantity form-fields--qty"
         data-quantity-wrapper
         >
         <div class="form-field form-field--qty-select {% if item.quantity < 10 %}visible{% else %}hidden{% endif %}">
-          <div class="form-field-select-wrapper">
+          <div class="form-field-select-wrapper {% if is_bundleslave %} avisually-hidden {% endif %}">
             <select
               class="form-field-input form-field-select form-field-filled"
               id="quantity_{{ item.key | replace: ':', '_' }}"
               {% if item.quantity >= 10 %}tabindex="-1"{% endif %}
               aria-label="{{ 'general.general.quantity' | t }}"
-              data-quantity-select
+              data-quantity-select              
               data-cartitem-quantity>
               {% for i in (1..9) %}
                 <option {% if i == item.quantity %}selected {% endif %}value="{{ i }}">
@@ -152,12 +164,15 @@
             {% if item.quantity < 10 %}tabindex="-1"{% endif %}
             aria-label="{{ 'general.general.quantity' | t }}"
             data-quantity-input
+            {% if is_bundlemaster %}data-cartitem-bm-qs="{{ bundle_ts }}"{% endif %}
+            {% if is_bundleslave %}data-cartitem-bs-qs="{{ bundle_ts }}"{% endif %}
             data-cartitem-quantity>
           <label class="form-field-title" for="updates_{{ item.key }}">
             {{ 'general.general.quantity' | t }}
           </label>
         </div>
       </div>
+      
 
       <div class="cart-item--total">
         <span class="visually-hidden">{{ 'product.item.price.total_line_price' | t }}</span>
@@ -174,18 +189,30 @@
           {{ item.final_line_price | money }}
         </div>
       </div>
-
+      
       <div class="cart-item--remove">
+        {% assign is_bundlemaster = false %}
+        {% assign is_bundleslave = false %}
+        {% assign bundle_ts = item.properties['_bundle_ts'] %}
+        {% if item.properties['_bundle_master'] == 'true' %}          
+          {% assign is_bundlemaster = true %}
+        {% endif %}
+        {% if item.properties['_bundle_slave'] == 'true' %}
+          {% assign is_bundleslave = true %}
+        {% endif %}
         <a
           href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0"
-          class="cart-item--remove-link"
+          class="cart-item--remove-link {% if is_bundleslave %} visually-hidden {% endif %}"
           data-cartitem-remove
           data-no-instant
+          {% if is_bundlemaster %}data-bm-remove-ts="{{ bundle_ts }}"{% endif %}
+          {% if is_bundleslave %}data-bs-remove-ts="{{ bundle_ts }}"{% endif %}
           aria-label="remove {{ item.product.title | escape }}"
         >
           {% render 'icon-remove' %}
         </a>
       </div>
+      
 
     </div>
   </div>
