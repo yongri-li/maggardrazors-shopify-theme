@@ -101,7 +101,7 @@
         {{ product.description }}
       </div>
       <div class="products-select-box">
-        {% assign product_bundle_metafields = product.metafields.global.bundle_proudct_handles | split: "," %}
+        {% assign product_bundle_metafields = product.metafields.global.bundle_product_handles | split: "," %}
         {% assign product_bundle_metafields_required = product.metafields.global.bundle_product_required | split: "," %}
         {% for product_metafield in product_bundle_metafields %}
           <div class="product_bundle_items">
