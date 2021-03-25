@@ -79,7 +79,15 @@ jQuery(function() {
         $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
-    }  
+    } 
+    if(classes.includes('last-bundle--mark')) {
+      $('.product_bundle_reviews').empty();
+      $('.product_bundle_varient_selection').each(function(index) {
+        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+      });
+      $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
+      $('.product_select_results').removeClass('product_select_results_hide');
+    } 
   });
   $(".product_bundle_cart_btn").on("click", function() {
     let quantity = $(".product_bundle_quantity").val();
