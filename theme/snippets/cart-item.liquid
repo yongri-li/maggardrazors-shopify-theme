@@ -129,7 +129,7 @@
         data-quantity-wrapper
         >
         <div class="form-field form-field--qty-select {% if item.quantity < 10 %}visible{% else %}hidden{% endif %}">
-          <div class="form-field-select-wrapper {% if is_bundleslave %} avisually-hidden {% endif %}">
+          <div class="form-field-select-wrapper {% if is_bundleslave %} visually-hidden {% endif %}">
             <select
               class="form-field-input form-field-select form-field-filled"
               id="quantity_{{ item.key | replace: ':', '_' }}"
