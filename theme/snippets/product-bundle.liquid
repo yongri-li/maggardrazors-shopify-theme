@@ -95,7 +95,8 @@
         {{ product.title }}
       </h2> 
       <div class="product-bundle-price">
-        {{ product.price | money }}
+        <span class="product_bundle_variant_price">{{ product.price | money }}</span>
+        <span class="product_bundle_discount_price">{{ product.price | money }}</span>
       </div>
       <div class="product-bundle-description">
         {{ product.description }}
@@ -123,16 +124,32 @@
                   {% if product_bundle_item.has_only_default_variant %}
                     <div class="product_bundle_varient"  data-product-variant-id="{{product_bundle_item.first_available_variant.id}}" data-discount-percent="{{ product_bundle_item.first_available_variant.metafields.bundle.discount_percent }}" data-discount-fixed="{{ product_bundle_item.first_available_variant.metafields.bundle.discount_fixed }}"  data-product-name="{{product_bundle_item.title}}" data-product-price={{product_bundle_item.price}}>
                       <img src="{{product_bundle_item.featured_image | img_url : '100x'}}"/>
-                      <span class="product_bundle_variant_title">{{product_bundle_item.title}}</span>
-                      <span class="product_bundle_variant_price">{{product_bundle_item.price | money }}</span>                    
+                      <span class="product_bundle_variant_title">{{product_bundle_item.title}}</span>  
+                      {% if product_bundle_item.first_available_variant.metafields.bundle.discount_percent != blank %}
+                      {% assign discount_percent = 100.0 | minus: product_bundle_item.first_available_variant.metafields.bundle.discount_percent %}
+                      {% assign product_discounted_price = product_bundle_item.price | times: discount_percent | divided_by: 100.0 %}
+                      {% elsif product_bundle_item.first_available_variant.metafields.bundle.discount_fixed != blank %}
+                      {% assign product_discounted_price = product_bundle_item.price | minus: product_bundle_item.first_available_variant.metafields.bundle.discount_fixed %}
+                      {% else %}
+                      {% assign product_discounted_price = product_bundle_item.price%}
+                      {% endif %}                     
+                      <div class="product_prices_box">{% if product_discounted_price != product_bundle_item.price %}<span class="product_bundle_variant_price">{{product_bundle_item.price | money }}</span>{% endif %}</span> <span class="product_bundle_discount_price">{{product_discounted_price | money }}</span></div>                   
                     </div>
                     
                   {% else %}
                     {% for product_bundle_variant in product_bundle_item.variants %}
-                      <div class="product_bundle_varient" data-product-variant-id="{{product_bundle_variant.id}}" data-discount-percent="{{ product_bundle_variant.metafields.bundle.discount_percent }}" data-discount-fixed="{{ product_bundle_variant.metafields.bundle.discount_fixed }}" data-product-name="{{product_bundle_item.title}}" data-product-price={{product_bundle_variant.price}}>
+                      <div class="product_bundle_varient" data-product-variant-id="{{product_bundle_variant.id}}" data-discount-percent="{{ product_bundle_variant.metafields.bundle.discount_percent }}" data-discount-fixed="{{ product_bundle_variant.metafields.bundle.discount_fixed }}" data-product-name="{{product_bundle_item.title}} - {{product_bundle_variant.title}}" data-product-price={{product_bundle_variant.price}}>
                         <img src="{{product_bundle_variant.image | img_url : '100x'}}"/>
                         <span class="product_bundle_variant_title">{{product_bundle_variant.title}}</span>
-                        <span class="product_bundle_variant_price">{{product_bundle_variant.price | money }}</span>                    
+                        {% if product_bundle_variant.metafields.bundle.discount_percent != blank %}
+                        {% assign discount_percent = 100.0 | minus: product_bundle_variant.metafields.bundle.discount_percent %}
+                        {% assign product_discounted_price = product_bundle_variant.price | times: discount_percent | divided_by: 100.0 %}
+                        {% elsif product_bundle_variant.metafields.bundle.discount_fixed != blank %}
+                        {% assign product_discounted_price = product_bundle_variant.price | minus: product_bundle_variant.metafields.bundle.discount_fixed %}
+                        {% else %}
+                        {% assign product_discounted_price = product_bundle_variant.price%}
+                        {% endif %}
+                        <div class="product_prices_box">{% if product_discounted_price != product_bundle_variant.price %}<span class="product_bundle_variant_price">{{product_bundle_variant.price | money }}</span>{% endif %}<span class="product_bundle_discount_price">{{product_discounted_price | money }}</span></div>                   
                       </div>
                     {% endfor %} 
                   {% endif %}
