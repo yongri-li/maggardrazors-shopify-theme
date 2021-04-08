@@ -158,7 +158,7 @@ jQuery(function() {
             'id':$(this).data('product-variant-id'),
             'quantity':parseInt(quantity, 0),
             "properties" : {
-              '_discount-fixed': discountFixed,
+              '_discount-fixed': discountFixed*100,
               '_bundle_ts': timestamp,
               '_bundle_slave': 'true'
             }
