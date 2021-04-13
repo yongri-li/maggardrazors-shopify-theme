@@ -129,14 +129,34 @@
                       {% endif %}
                       {% endcomment %}
                       {% assign variant_of_collection = product_of_collection.selected_or_first_available_variant%}
-                      <div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ variant_of_collection.metafields.bundle.discount_percent }}" data-discount-fixed="{{ variant_of_collection.metafields.bundle.discount_fixed }}" data-product-name="{{product_of_collection.title | escape }}" data-product-price={{product_of_collection.price}}>
+                      {% assign variant_percent_discounts = variant_of_collection.metafields.bundle.discount_percent | split: "," %}                      
+                      {% assign variant_fixed_discounts = variant_of_collection.metafields.bundle.discount_fixed | split: "," %}
+                      {% assign v_percent_discount = null %}
+                      {% assign v_fixed_discount = null %}
+                      {% for vpd in variant_percent_discounts %}
+                        {% assign vpd_item_arr = vpd | split: "/" %}
+                        {% assign vpd_item = vpd_item_arr[1] %}
+                        {% if vpd_item == product.handle %}
+                          {% assign v_percent_discount = vpd_item_arr[0] %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% for vfd in variant_fixed_discounts %}
+                        {% assign vfd_item_arr = vfd | split: "/" %}
+                        {% assign vfd_item = vfd_item_arr[1] %}
+                        {% if vfd_item == product.handle %}
+                          {% assign v_fixed_discount = vfd_item_arr[0] %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      <div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{{product_of_collection.title | escape }}" data-product-price={{product_of_collection.price}}>
                         <img src="{{product_of_collection.featured_image | img_url : '100x'}}"/>
                         <span class="product_bundle_variant_title">{{product_of_collection.title}}</span>
-                        {% if variant_of_collection.metafields.bundle.discount_percent != blank %}
-                        {% assign discount_percent = 100.0 | minus: variant_of_collection.metafields.bundle.discount_percent %}
+                        {% if v_percent_discount != blank %}
+                        {% assign discount_percent = 100.0 | minus: v_percent_discount %}
                         {% assign product_discounted_price = product_of_collection.price | times: discount_percent | divided_by: 100.0 %}
-                        {% elsif variant_of_collection.metafields.bundle.discount_fixed != blank %}
-                        {% assign discount_fixed = variant_of_collection.metafields.bundle.discount_fixed | times: 100.00 %}
+                        {% elsif v_fixed_discount != blank %}
+                        {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
                         {% assign product_discounted_price = product_of_collection.price | minus: discount_fixed %}
                         {% else %}
                         {% assign product_discounted_price = product_of_collection.price%}
