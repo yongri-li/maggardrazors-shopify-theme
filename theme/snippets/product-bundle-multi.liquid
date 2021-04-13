@@ -107,7 +107,14 @@
         {% for product_metafield in product_bundle_metafields %}
           <div class="product_bundle_items">
               <!-- {% assign product_bundle_item = all_products[product_metafield] %} -->
-              {% assign collection_bundle_item = collections[product_metafield] %}
+              {% assign product_metafield_arr = product_metafield | split: "/" %}
+              {% assign collection_bundle_item = null %}
+              {% assign product_bundle_item = null %}
+              {% if product_metafield_arr[1] == "collection" %}
+              {% assign collection_bundle_item = collections[product_metafield_arr[0]] %}
+              {% elsif product_metafield_arr[1] == 'product' %}
+              {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
+              {% endif %}
               {% if forloop.index > 1 %}
               {% assign product_bundle_header_class = 'product_bundle_items_header_disable_no_active' %}
               {% assign product_bundle_wrap_class = 'product_bundle_wrap_hide' %}
@@ -118,63 +125,17 @@
 
               <div class="product_bundle_items_header {{product_bundle_header_class}}">
                 <span class="product_bundle_items_title">Select</span>
-                <span class="product_bundle_items_variants_header">Step {{forloop.index}}: {{collection_bundle_item.title}}</span>
+                <span class="product_bundle_items_variants_header">Step {{forloop.index}}: {% if collection_bundle_item != blank %}{{collection_bundle_item.title}} {% endif %} {% if product_bundle_item != blank %}{{product_bundle_item.title}}{% endif %}</span>
               </div>
               <div class="product_bundle_wrap {{product_bundle_wrap_class}}">
-                <div class="product_bundle_items_variants">  
-                    {% for product_of_collection in collection_bundle_item.products %}
-                      {% comment %}{% if product_of_collection.has_only_default_variant %}
-                      {% assign variant_of_collection_id = product_of_collection.first_available_variant.id %}
-                      {% else %}
-                      {% endif %}
-                      {% endcomment %}
-                      {% assign variant_of_collection = product_of_collection.selected_or_first_available_variant%}
-                      {% assign variant_percent_discounts = variant_of_collection.metafields.bundle.discount_percent | split: "," %}                      
-                      {% assign variant_fixed_discounts = variant_of_collection.metafields.bundle.discount_fixed | split: "," %}
-                      {% assign v_percent_discount = null %}
-                      {% assign v_fixed_discount = null %}
-                      {% for vpd in variant_percent_discounts %}
-                        {% assign vpd_item_arr = vpd | split: "/" %}
-                        {% assign vpd_item = vpd_item_arr[1] %}
-                        {% if vpd_item == product.handle %}
-                          {% assign v_percent_discount = vpd_item_arr[0] %}
-                          {% break %}
-                        {% endif %}
-                      {% endfor %}
-                      {% for vfd in variant_fixed_discounts %}
-                        {% assign vfd_item_arr = vfd | split: "/" %}
-                        {% assign vfd_item = vfd_item_arr[1] %}
-                        {% if vfd_item == product.handle %}
-                          {% assign v_fixed_discount = vfd_item_arr[0] %}
-                          {% break %}
-                        {% endif %}
-                      {% endfor %}
-                      <div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{{product_of_collection.title | escape }}" data-product-price={{product_of_collection.price}}>
-                        <img src="{{product_of_collection.featured_image | img_url : '100x'}}"/>
-                        <span class="product_bundle_variant_title">{{product_of_collection.title}}</span>
-                        {% if v_percent_discount != blank %}
-                        {% assign discount_percent = 100.0 | minus: v_percent_discount %}
-                        {% assign product_discounted_price = product_of_collection.price | times: discount_percent | divided_by: 100.0 %}
-                        {% elsif v_fixed_discount != blank %}
-                        {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
-                        {% assign product_discounted_price = product_of_collection.price | minus: discount_fixed %}
-                        {% else %}
-                        {% assign product_discounted_price = product_of_collection.price%}
-                        {% endif %}
-                        {% if product_of_collection.variants.size > 1 %} 
-                        <div class="product_variants_options">
-                          <select class="product_variant_select">
-                            {% for product_variant_option in product_of_collection.variants %}
-                              {% if product_variant_option.available %}
-                              <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if product_variant_option.metafields.bundle.discount_percent != blank %} data-option-discount-percent={{product_variant_option.metafields.bundle.discount_percent}} {% endif %}  {% if product_variant_option.metafields.bundle.discount_fixed != blank %} data-option-discount-fixed={{product_variant_option.metafields.bundle.discount_fixed}} {% endif %} data-product-variant-option-id={{product_variant_option.id}}>{{product_variant_option.title}}</option>
-                              {% endif %}
-                            {% endfor %}
-                          </select>
-                        </div> 
-                        {% endif %}             
-                        <div class="product_prices_box">{% if product_discounted_price != product_of_collection.price %}<span class="product_bundle_variant_price">{{product_of_collection.price | money }}</span>{% endif %}<span class="product_bundle_discount_price">{{product_discounted_price | money }}</span></div>    
-                      </div>
-                    {% endfor %} 
+                <div class="product_bundle_items_variants">
+                    {% if collection_bundle_item != blank %}
+                    {% for product_item in collection_bundle_item.products %}
+                      {% render 'product-bundle-item', product_item: product_item %}
+                    {% endfor %}
+                    {% elsif product_bundle_item != blank %} 
+                      {% render 'product-bundle-item', product_item: product_bundle_item%}
+                    {% endif %}
                 </div>
                 {% if product_bundle_metafields.size == forloop.index %}
                 {% assign last_element = 'last-bundle--mark' %}

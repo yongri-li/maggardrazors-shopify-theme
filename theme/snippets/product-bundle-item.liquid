@@ -1,0 +1,68 @@
+{% assign variant_of_collection = product_item.selected_or_first_available_variant%}
+{% assign variant_percent_discounts = variant_of_collection.metafields.bundle.discount_percent | split: "," %}                      
+{% assign variant_fixed_discounts = variant_of_collection.metafields.bundle.discount_fixed | split: "," %}
+{% assign v_percent_discount = null %}
+{% assign v_fixed_discount = null %}
+{% for vpd in variant_percent_discounts %}
+  {% assign vpd_item_arr = vpd | split: "/" %}
+  {% assign vpd_item = vpd_item_arr[1] %}
+  {% if vpd_item == product.handle %}
+    {% assign v_percent_discount = vpd_item_arr[0] %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% for vfd in variant_fixed_discounts %}
+  {% assign vfd_item_arr = vfd | split: "/" %}
+  {% assign vfd_item = vfd_item_arr[1] %}
+  {% if vfd_item == product.handle %}
+    {% assign v_fixed_discount = vfd_item_arr[0] %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+<div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{{product_item.title | escape }}" data-product-price={{product_item.price}}>
+  <img src="{{product_item.featured_image | img_url : '100x'}}"/>
+  <span class="product_bundle_variant_title">{{product_item.title}}</span>
+  {% if v_percent_discount != blank %}
+  {% assign discount_percent = 100.0 | minus: v_percent_discount %}
+  {% assign product_discounted_price = product_item.price | times: discount_percent | divided_by: 100.0 %}
+  {% elsif v_fixed_discount != blank %}
+  {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
+  {% assign product_discounted_price = product_item.price | minus: discount_fixed %}
+  {% else %}
+  {% assign product_discounted_price = product_item.price%}
+  {% endif %}
+  {% if product_item.variants.size > 1 %}
+  <div class="product_variants_options">
+    <select class="product_variant_select">
+      {% for product_variant_option in product_item.variants %}
+
+        {% assign variant_option_percent_discounts = product_variant_option.metafields.bundle.discount_percent | split: "," %}                      
+        {% assign variant_option_fixed_discounts = product_variant_option.metafields.bundle.discount_fixed | split: "," %}
+        {% assign v_option_percent_discount = null %}
+        {% assign v_option_fixed_discount = null %}
+        {% for vopd in variant_option_percent_discounts %}
+          {% assign vopd_item_arr = vopd | split: "/" %}
+          {% assign vopd_item = vopd_item_arr[1] %}
+          {% if vopd_item == product.handle %}
+            {% assign v_option_percent_discount = vopd_item_arr[0] %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        {% for vofd in variant_option_fixed_discounts %}
+          {% assign vofd_item_arr = vofd | split: "/" %}
+          {% assign vofd_item = vofd_item_arr[1] %}
+          {% if vofd_item == product.handle %}
+            {% assign v_option_fixed_discount = vofd_item_arr[0] %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        {% if product_variant_option.available %}
+        <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}}>{{product_variant_option.title}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div> 
+  {% endif %}             
+  <div class="product_prices_box">{% if product_discounted_price != product_item.price %}<span class="product_bundle_variant_price">{{product_item.price | money }}</span>{% endif %}<span class="product_bundle_discount_price">{{product_discounted_price | money }}</span></div>    
+</div>

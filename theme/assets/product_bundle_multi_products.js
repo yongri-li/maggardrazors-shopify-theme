@@ -43,7 +43,7 @@ jQuery(function() {
       total_discounted_price += addFixedAmount;
       temp_discount_value = addFixedAmount;
     } else {
-      total_discounted_price = total_price;
+      total_discounted_price += parseFloat($(this).data('product-price'));;
       temp_discount_value = parseFloat($(this).data('product-price'));
     }
     temp_value = parseFloat($(this).data('product-price'));
