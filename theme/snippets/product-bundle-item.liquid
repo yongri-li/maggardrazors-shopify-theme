@@ -23,16 +23,18 @@
   <img src="{{product_item.featured_image | img_url : '100x'}}"/>
   <span class="product_bundle_variant_title">{{product_item.title}}</span>
   {% if v_percent_discount != blank %}
-  {% assign discount_percent = 100.0 | minus: v_percent_discount %}
-  {% assign product_discounted_price = product_item.price | times: discount_percent | divided_by: 100.0 %}
+    {% assign discount_percent = 100.0 | minus: v_percent_discount %}
+    {% assign product_discounted_price = product_item.price | times: discount_percent | divided_by: 100.0 %}
   {% elsif v_fixed_discount != blank %}
-  {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
-  {% assign product_discounted_price = product_item.price | minus: discount_fixed %}
+    {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
+    {% assign product_discounted_price = product_item.price | minus: discount_fixed %}
   {% else %}
-  {% assign product_discounted_price = product_item.price%}
+    {% assign product_discounted_price = product_item.price%}
   {% endif %}
+
   {% if product_item.variants.size > 1 %}
   <div class="product_variants_options">
+    {% assign variant_minimum_price = 0 %}
     <select class="product_variant_select">
       {% for product_variant_option in product_item.variants %}
 
@@ -57,12 +59,32 @@
           {% endif %}
         {% endfor %}
 
+        {% if v_option_percent_discount != blank %}
+          {% assign variant_discount_percent = 100.0 | minus: v_option_percent_discount %}
+          {% assign variant_discounted_price = product_variant_option.price | times: variant_discount_percent | divided_by: 100.0 %}
+        {% elsif v_option_fixed_discount != blank %}
+          {% assign varient_discount_fixed = v_option_fixed_discount | times: 100.00 %}
+          {% assign variant_discounted_price = product_variant_option.price | minus: varient_discount_fixed %}
+        {% else %}
+          {% assign variant_discounted_price = product_variant_option.price %}
+        {% endif %}
+
+        {% if forloop.index == 1 %}
+          {% assign variant_minimum_price = variant_discounted_price %}
+        {% else %}
+          {% if variant_minimum_price > variant_discounted_price %}
+            {% assign variant_minimum_price = variant_discounted_price %}
+          {% endif %}
+        {% endif %}        
         {% if product_variant_option.available %}
         <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}}>{{product_variant_option.title}}</option>
         {% endif %}
       {% endfor %}
     </select>
+    <input type="hidden" data-item-discount-price="{{variant_minimum_price}}" class="item_discount_value"/>
   </div> 
+  {% else %}
+    <input type="hidden" data-item-discount-price="{{product_discounted_price}}" class="item_discount_value"/>
   {% endif %}             
-  <div class="product_prices_box">{% if product_discounted_price != product_item.price %}<span class="product_bundle_variant_price">{{product_item.price | money }}</span>{% endif %}<span class="product_bundle_discount_price">{{product_discounted_price | money }}</span></div>    
+  <div class="product_prices_box">{% if product_discounted_price != product_item.price %}<span class="product_bundle_variant_price">{{product_item.price | money }}</span>{% endif %}<span class="product_bundle_discount_price" data-item-discount-price="{{product_discounted_price}}">{{product_discounted_price | money }}</span></div>    
 </div>

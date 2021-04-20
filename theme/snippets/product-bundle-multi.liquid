@@ -35,6 +35,9 @@
 {% assign sku = selected_variant.sku %}
 {% assign product_available = product.available %}
 
+{% assign bundle_minimum_price = 0 %}
+{% assign bundle_step_minimum_price = 0 %}
+
 {% comment %}For a potential divider in the product.description we need to split the content{% endcomment %}
 {% assign readmore_split = product.description | split: '<!-- more -->' %}
 
@@ -94,6 +97,7 @@
       <h2 class="product-bundle-title">
         {{ product.title }}
       </h2> 
+      <span class="bundle_minimum_price"></span>
       <div class="product-bundle-price">
         <span class="product_bundle_variant_price">{{ product.price | money }}</span>
         <span class="product_bundle_discount_price">{{ product.price | money }}</span>
@@ -107,6 +111,7 @@
         {% for product_metafield in product_bundle_metafields %}
           <div class="product_bundle_items">
               <!-- {% assign product_bundle_item = all_products[product_metafield] %} -->
+              {% assign bundle_step_minimum_price = 0 %}
               {% assign product_metafield_arr = product_metafield | split: "/" %}
               {% assign collection_bundle_item = null %}
               {% assign product_bundle_item = null %}
@@ -131,10 +136,10 @@
                 <div class="product_bundle_items_variants">
                     {% if collection_bundle_item != blank %}
                     {% for product_item in collection_bundle_item.products %}
-                      {% render 'product-bundle-item', product_item: product_item %}
+                      {% render 'product-bundle-item', product_item: product_item %}                      
                     {% endfor %}
                     {% elsif product_bundle_item != blank %} 
-                      {% render 'product-bundle-item', product_item: product_bundle_item%}
+                      {% render 'product-bundle-item', product_item: product_bundle_item %}
                     {% endif %}
                 </div>
                 {% if product_bundle_metafields.size == forloop.index %}

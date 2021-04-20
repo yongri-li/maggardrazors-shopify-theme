@@ -191,4 +191,33 @@ jQuery(function() {
       console.error('Error:', error);
     });
   });
+
+  //show the bundle minimum price
+  $(window).on('load', function() {
+    var total_minimum_price = 0;
+    $('.product_bundle_wrap').each(function() {
+      //console.log($(this).find('.item_discount_value').data('item-discount-price')+",");
+      var temp_minimum = 0;
+      var dont_required = $(this).find('.select-not-need-btn').length;
+      if(dont_required > 0) {
+        temp_minimum = 0;
+      } else {
+        $(this).find('.item_discount_value').each(function(index) {
+          var item_value = $(this).data('item-discount-price');
+          if(index == 0) {
+            temp_minimum = item_value;
+          } else {
+            if(temp_minimum > item_value) {
+              temp_minimum = item_value;
+            }
+          }
+        });
+      }      
+      console.log(temp_minimum);
+      total_minimum_price+=parseFloat(temp_minimum);
+    });
+
+    $('.bundle_minimum_price').text('From '+ formatMoney(total_minimum_price));
+    //console.log("Total...", total_minimum_price)
+  });
 })
