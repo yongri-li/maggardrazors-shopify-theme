@@ -80,14 +80,18 @@ jQuery(function() {
     const $bundleItem = $(this).closest('.product_bundle_items');
     $bundleItem.children('.product_bundle_items_header').removeClass('product_bundle_items_header_active');
     $bundleItem.children('.product_bundle_items_header').addClass('product_bundle_items_header_no_active');
-    $bundleItem.next().children('.product_bundle_items_header').removeClass('product_bundle_items_header_disable_no_active');
-    $bundleItem.next().children('.product_bundle_items_header').addClass('product_bundle_items_header_active');
-    $bundleItem.next().children('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');  
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_items_header').removeClass('product_bundle_items_header_disable_no_active');
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_items_header').addClass('product_bundle_items_header_active');
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');  
     var classes = $(this).attr("class");
     if(classes.includes('last-bundle--mark')) {
       $('.product_bundle_reviews').empty();
       $('.product_bundle_varient_selection').each(function(index) {
-        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+        if($(this).data('product-quantity') != undefined) {
+          $('<div>'+(index+1)+". " + $(this).data('product-name')+'( <b>Quantity</b>: '+$(this).data('product-quantity')+' )</div>').appendTo($('.product_bundle_reviews'));
+        } else {
+          $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+        }        
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
       $('.product_select_results').removeClass('product_select_results_hide');
@@ -102,9 +106,9 @@ jQuery(function() {
     $bundleItem0.children('.product_bundle_items_variants').children('.product_bundle_varient').removeClass('product_bundle_varient_selection');    
     $bundleItem.children('.product_bundle_items_header').removeClass('product_bundle_items_header_active');
     $bundleItem.children('.product_bundle_items_header').addClass('product_bundle_items_header_no_active');
-    $bundleItem.next().children('.product_bundle_items_header').removeClass('product_bundle_items_header_no_active_disable');
-    $bundleItem.next().children('.product_bundle_items_header').addClass('product_bundle_items_header_active');
-    $bundleItem.next().children('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');  
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_items_header').removeClass('product_bundle_items_header_no_active_disable');
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_items_header').addClass('product_bundle_items_header_active');
+    $bundleItem.nextAll('.product_bundle_items').eq(0).find('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');  
     var classes = $(this).attr("class");
     if(classes.includes('last-not-bundle')) {
       $('.product_bundle_reviews').empty();
@@ -140,13 +144,20 @@ jQuery(function() {
     };
 
     $('.product_bundle_varient_selection').each(function() {
-        const discountPercent = $(this).data('discount-percent');
-        const discountFixed = $(this).data('discount-fixed');
-        
+        var discountPercent = $(this).data('discount-percent');
+        var discountFixed = $(this).data('discount-fixed');
+        var individual_quantity = $(this).data('product-quantity');
+        var individual_product_quantity = 0;
+        if (individual_quantity != undefined) {
+          individual_product_quantity = parseInt(individual_quantity);
+        } else {
+          individual_product_quantity = 1;
+        }
+
         if(discountPercent != "") {
           formData.items.push({
             'id':$(this).data('product-variant-id'),
-            'quantity':parseInt(quantity, 0),
+            'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {
               '_discount-percent': discountPercent,
               '_bundle_ts': timestamp,
@@ -156,9 +167,9 @@ jQuery(function() {
         } else if(discountFixed != "") {
           formData.items.push({
             'id':$(this).data('product-variant-id'),
-            'quantity':parseInt(quantity, 0),
+            'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {
-              '_discount-fixed': discountFixed*100,
+              '_discount-fixed': discountFixed*100*parseInt(quantity*individual_product_quantity, 0),
               '_bundle_ts': timestamp,
               '_bundle_slave': 'true'
             }
@@ -166,7 +177,7 @@ jQuery(function() {
         } else {
           formData.items.push({
             'id':$(this).data('product-variant-id'),
-            'quantity':parseInt(quantity, 0),
+            'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {              
               '_bundle_ts': timestamp,
               '_bundle_slave': 'true'
@@ -174,8 +185,8 @@ jQuery(function() {
           });
         }
             
-    });
-    console.log(formData);
+    });  
+
     fetch('/cart/add.js', {
       method: 'POST',
       headers: {

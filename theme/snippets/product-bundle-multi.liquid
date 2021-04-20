@@ -109,25 +109,51 @@
         {% assign product_bundle_metafields = product.metafields.global.bundle_product_handles | split: "," %}
         {% assign product_bundle_metafields_required = product.metafields.global.bundle_product_required | split: "," %}
         {% for product_metafield in product_bundle_metafields %}
-          <div class="product_bundle_items">
-              <!-- {% assign product_bundle_item = all_products[product_metafield] %} -->
-              {% assign bundle_step_minimum_price = 0 %}
-              {% assign product_metafield_arr = product_metafield | split: "/" %}
-              {% assign collection_bundle_item = null %}
-              {% assign product_bundle_item = null %}
-              {% if product_metafield_arr[1] == "collection" %}
-              {% assign collection_bundle_item = collections[product_metafield_arr[0]] %}
-              {% elsif product_metafield_arr[1] == 'product' %}
-              {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
-              {% endif %}
-              {% if forloop.index > 1 %}
-              {% assign product_bundle_header_class = 'product_bundle_items_header_disable_no_active' %}
-              {% assign product_bundle_wrap_class = 'product_bundle_wrap_hide' %}
-              {% else %}
-              {% assign product_bundle_header_class = 'product_bundle_items_header_active' %}
-              {% assign product_bundle_wrap_class = '' %}
-              {% endif %}  
 
+          {% assign bundle_step_minimum_price = 0 %}
+          {% assign product_metafield_arr = product_metafield | split: "/" %}
+          {% assign collection_bundle_item = null %}
+          {% assign product_bundle_item = null %}
+          {% if product_metafield_arr[1] == "collection" %}
+            {% assign collection_bundle_item = collections[product_metafield_arr[0]] %}
+          {% elsif product_metafield_arr[1] == 'product' %}
+            {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
+            {% assign product_quantity_num = product_metafield_arr[2] | plus: 0 %}
+            {% if product_quantity_num > 0 and product_bundle_metafields_required[forloop.index0] == '1' %}
+              {% assign variant_percent_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_percent | split: "," %}                      
+              {% assign variant_fixed_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_fixed | split: "," %}
+              {% assign v_percent_discount = null %}
+              {% assign v_fixed_discount = null %}
+              {% for vpd in variant_percent_discounts %}
+                {% assign vpd_item_arr = vpd | split: "/" %}
+                {% assign vpd_item = vpd_item_arr[1] %}
+                {% if vpd_item == product.handle %}
+                  {% assign v_percent_discount = vpd_item_arr[0] %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+              {% for vfd in variant_fixed_discounts %}
+                {% assign vfd_item_arr = vfd | split: "/" %}
+                {% assign vfd_item = vfd_item_arr[1] %}
+                {% if vfd_item == product.handle %}
+                  {% assign v_fixed_discount = vfd_item_arr[0] %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+
+              <input type="hidden" class="product_bundle_varient_selection" data-product-name='{{product_bundle_item.title | escape}}' data-product-variant-id="{{product_bundle_item.selected_or_first_available_variant.id}}" data-product-quantity="{{product_quantity_num}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}"/>
+              {% continue %}
+            {% endif %}
+          {% endif %}
+          {% if forloop.index > 1 %}
+            {% assign product_bundle_header_class = 'product_bundle_items_header_disable_no_active' %}
+            {% assign product_bundle_wrap_class = 'product_bundle_wrap_hide' %}
+          {% else %}
+            {% assign product_bundle_header_class = 'product_bundle_items_header_active' %}
+            {% assign product_bundle_wrap_class = '' %}
+          {% endif %}  
+
+          <div class="product_bundle_items">
               <div class="product_bundle_items_header {{product_bundle_header_class}}">
                 <span class="product_bundle_items_title">Select</span>
                 <span class="product_bundle_items_variants_header">Step {{forloop.index}}: {% if collection_bundle_item != blank %}{{collection_bundle_item.title}} {% endif %} {% if product_bundle_item != blank %}{{product_bundle_item.title}}{% endif %}</span>

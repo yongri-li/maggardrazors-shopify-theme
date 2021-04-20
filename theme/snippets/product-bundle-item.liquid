@@ -29,7 +29,7 @@
     {% assign discount_fixed = v_fixed_discount | times: 100.00 %}
     {% assign product_discounted_price = product_item.price | minus: discount_fixed %}
   {% else %}
-    {% assign product_discounted_price = product_item.price%}
+    {% assign product_discounted_price = product_item.price %}
   {% endif %}
 
   {% if product_item.variants.size > 1 %}
