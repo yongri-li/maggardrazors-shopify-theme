@@ -161,7 +161,8 @@ jQuery(function() {
             "properties" : {
               '_discount-percent': discountPercent,
               '_bundle_ts': timestamp,
-              '_bundle_slave': 'true'
+              '_bundle_slave': 'true',
+              '_product_num':parseInt(individual_product_quantity, 0)
             }
           });    
         } else if(discountFixed != "") {
@@ -169,9 +170,10 @@ jQuery(function() {
             'id':$(this).data('product-variant-id'),
             'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {
-              '_discount-fixed': discountFixed*100*parseInt(quantity*individual_product_quantity, 0),
+              '_discount-fixed': discountFixed*100,
               '_bundle_ts': timestamp,
-              '_bundle_slave': 'true'
+              '_bundle_slave': 'true',
+              '_product_num':parseInt(individual_product_quantity, 0)
             }
           });    
         } else {
@@ -180,7 +182,8 @@ jQuery(function() {
             'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {              
               '_bundle_ts': timestamp,
-              '_bundle_slave': 'true'
+              '_bundle_slave': 'true',
+              '_product_num':parseInt(individual_product_quantity, 0)
             }          
           });
         }

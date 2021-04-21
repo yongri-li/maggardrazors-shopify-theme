@@ -25260,14 +25260,14 @@ var StaticCart_StaticCart = /*#__PURE__*/function () {
 
 				const bundle_ts = $(this).data('cartitem-bm-qs');	
 				const qty = $(this).val();		
-				console.log(qty);
+				//console.log(qty);
 					
 				if (typeof bundle_ts !== 'undefined' && bundle_ts !== false) {	
 					const item_count = $('[data-cartitem-bs-qs="' + bundle_ts + '"]').length;
 					$('[data-cartitem-bs-qs="' + bundle_ts + '"]').each(function(index, item){
-						console.log(item);
-						$(item).val(qty);
-						$(item).closest('[data-quantity-wrapper]').find('.form-field.visible [data-cartitem-quantity]').val(qty);
+						var item_qty = parseInt($(item).data('product-num'));	
+						$(item).val(qty*item_qty);
+						$(item).closest('[data-quantity-wrapper]').find('.form-field.visible [data-cartitem-quantity]').val(qty*item_qty);
 						setTimeout(function(){
 							$(item).trigger('change.cart-page');
 						}, (index + 1) * 800);

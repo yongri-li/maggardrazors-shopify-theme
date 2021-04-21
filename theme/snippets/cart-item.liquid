@@ -122,7 +122,8 @@
     {% if item.properties['_bundle_slave'] == 'true' %}
       {% assign is_bundleslave = true %}
     {% endif %}
-
+    {% assign product_num = item.properties['_product_num'] %}
+    
     <div class="cart-item--info">      
       <div
         class="cart-item--quantity form-fields--qty"
@@ -166,6 +167,7 @@
             data-quantity-input
             {% if is_bundlemaster %}data-cartitem-bm-qs="{{ bundle_ts }}"{% endif %}
             {% if is_bundleslave %}data-cartitem-bs-qs="{{ bundle_ts }}"{% endif %}
+            {% if product_num != blank %}data-product-num="{{product_num}}"{% endif %}
             data-cartitem-quantity>
           <label class="form-field-title" for="updates_{{ item.key }}">
             {{ 'general.general.quantity' | t }}
