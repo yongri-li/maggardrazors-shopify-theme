@@ -168,7 +168,8 @@
             {% if is_bundlemaster %}data-cartitem-bm-qs="{{ bundle_ts }}"{% endif %}
             {% if is_bundleslave %}data-cartitem-bs-qs="{{ bundle_ts }}"{% endif %}
             {% if product_num != blank %}data-product-num="{{product_num}}"{% endif %}
-            data-cartitem-quantity>
+            data-cartitem-quantity
+            {% if is_bundleslave %}disabled{% endif %}>
           <label class="form-field-title" for="updates_{{ item.key }}">
             {{ 'general.general.quantity' | t }}
           </label>
