@@ -108,8 +108,8 @@
       <div class="products-select-box">
         {% assign product_bundle_metafields = product.metafields.global.bundle_product_handles | split: "," %}
         {% assign product_bundle_metafields_required = product.metafields.global.bundle_product_required | split: "," %}
-        {% for product_metafield in product_bundle_metafields %}
-
+        {% assign first_view_step = false %}       
+        {% for product_metafield in product_bundle_metafields %}          
           {% assign bundle_step_minimum_price = 0 %}
           {% assign product_metafield_arr = product_metafield | split: "/" %}
           {% assign collection_bundle_item = null %}
@@ -119,7 +119,10 @@
           {% elsif product_metafield_arr[1] == 'product' %}
             {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
             {% assign product_quantity_num = product_metafield_arr[2] | plus: 0 %}
-            {% if product_quantity_num > 0 and product_bundle_metafields_required[forloop.index0] == '1' %}
+            {% if product_quantity_num == 0 %}
+              {% assign product_quantity_num = 1 %}
+            {% endif %}
+            {% if product_bundle_metafields_required[forloop.index0] == '1' %}
               {% assign variant_percent_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_percent | split: "," %}                      
               {% assign variant_fixed_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_fixed | split: "," %}
               {% assign v_percent_discount = null %}

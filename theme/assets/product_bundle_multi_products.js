@@ -233,5 +233,29 @@ jQuery(function() {
 
     $('.bundle_minimum_price').text('From '+ formatMoney(total_minimum_price));
     //console.log("Total...", total_minimum_price)
+
+    //make the first appeared step active
+    if ($('.product_bundle_items').length > 0) {
+      $('.product_bundle_items').each(function(index) {
+        if (index ==  0) {
+          if($(this).find('.product_bundle_items_header').has('product_bundle_items_header_disable_no_active')) {
+            $(this).find('.product_bundle_items_header').removeClass('product_bundle_items_header_disable_no_active');
+          }
+          if(!$(this).find('.product_bundle_items_header').hasClass('product_bundle_items_header_active')) {
+            $(this).find('.product_bundle_items_header').addClass('product_bundle_items_header_active');
+          }  
+          if($(this).find('.product_bundle_wrap').hasClass('product_bundle_wrap_hide')) {
+            $(this).find('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');
+          }     
+        }
+      })
+    } else {
+      $('.product_bundle_reviews').empty();
+      $('.product_bundle_varient_selection').each(function(index) {
+        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+      });
+      $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
+      $('.product_select_results').removeClass('product_select_results_hide');
+    }    
   });
 })

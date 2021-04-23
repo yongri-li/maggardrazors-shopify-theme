@@ -12,13 +12,25 @@
   {%- assign item_has_discounts = true -%}
 {%- endif -%}
 
+{% assign is_bundlemaster = false %}
+{% assign is_bundleslave = false %}
+{% assign bundle_ts = item.properties['_bundle_ts'] %}
+{% if item.properties['_bundle_master'] == 'true' %}          
+  {% assign is_bundlemaster = true %}
+{% endif %}
+{% if item.properties['_bundle_slave'] == 'true' %}
+  {% assign is_bundleslave = true %}
+{% endif %}
+{% assign product_num = item.properties['_product_num'] %}
+    
 
 <li
   class="cart-item"
   data-cartitem
   data-cartitem-id="{{ item.variant_id }}"
   data-cartitem-key="{{ item.key }}"
-  data-cartitem-price="{{ item.price }}">
+  data-cartitem-price="{{ item.price }}"
+  data-bundle-ts="{{bundle_ts}}">
   <figure class="cart-item--image-wrapper">
     <a href="{{ item.url }}">
       {% if item.image %}
@@ -111,18 +123,6 @@
         </div>
       {% endif %}
     </div>
-
-    
-    {% assign is_bundlemaster = false %}
-    {% assign is_bundleslave = false %}
-    {% assign bundle_ts = item.properties['_bundle_ts'] %}
-    {% if item.properties['_bundle_master'] == 'true' %}          
-      {% assign is_bundlemaster = true %}
-    {% endif %}
-    {% if item.properties['_bundle_slave'] == 'true' %}
-      {% assign is_bundleslave = true %}
-    {% endif %}
-    {% assign product_num = item.properties['_product_num'] %}
     
     <div class="cart-item--info">      
       <div
@@ -215,8 +215,6 @@
           {% render 'icon-remove' %}
         </a>
       </div>
-      
-
     </div>
   </div>
 </li>

@@ -25278,23 +25278,22 @@ var StaticCart_StaticCart = /*#__PURE__*/function () {
 					}, (item_count + 1) * 800)
 				}
 			});
-      this.$el.on('click.cart-page', '[data-cartitem-remove]', function (event) {
-        event.preventDefault();
-				_this2._editItemQuantity(event, true);
-				console.log($(this).attr('aria-label'));
-				const bundle_ts = $(this).data('bm-remove-ts');			
+      // this.$el.on('click.cart-page', '[data-cartitem-remove]', function (event) {
+      //   event.preventDefault();
+			// 	_this2._editItemQuantity(event, true);
+			// 	console.log($(this).attr('aria-label'));
+			// 	const bundle_ts = $(this).data('bm-remove-ts');			
 					
-				if (typeof bundle_ts !== 'undefined' && bundle_ts !== false) {					
-					$('[data-bs-remove-ts="' + bundle_ts + '"]').each(function(index, item){
-						console.log(item);
-						setTimeout(function(){
-							$(item).trigger('click.cart-page');
-						}, (index + 1) * 1000);
+			// 	if (typeof bundle_ts !== 'undefined' && bundle_ts !== false) {					
+			// 		$('[data-bs-remove-ts="' + bundle_ts + '"]').each(function(index, item){
+			// 			setTimeout(function(){
+			// 				$(item).trigger('click.cart-page');
+			// 			}, (index + 1) * 1000);
 						
-					});
-				}
+			// 		});
+			// 	}
         
-      });
+      // });
       this.$window.on('resize.cart-page', just_debounce_default()(function () {
         return _this2._moveTitleTotal();
       }, 20));
