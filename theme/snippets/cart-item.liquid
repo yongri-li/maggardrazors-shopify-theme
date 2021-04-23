@@ -205,7 +205,7 @@
         {% endif %}
         <a
           href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0"
-          class="cart-item--remove-link {% if is_bundleslave %} visually-hidden {% endif %}"
+          class="cart-item--remove-link {% if is_bundlemaster %} cart-custom_bundle-remove-link {% else %} cart-general-remove-link{% endif %} {% if is_bundleslave %} visually-hidden {% endif %}"
           data-cartitem-remove
           data-no-instant
           {% if is_bundlemaster %}data-bm-remove-ts="{{ bundle_ts }}"{% endif %}

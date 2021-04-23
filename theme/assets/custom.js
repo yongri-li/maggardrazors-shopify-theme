@@ -24,23 +24,45 @@
  */
 
  $(document).ready(function() {
-  $(document).on('click', '.cart-item--remove-link', function(e) { 
+  $(document).on('click', '.cart-custom_bundle-remove-link', function(e) { 
     e.preventDefault();
     var actions_group_id = $(this).data('bm-remove-ts');
-    var jsonObj = {}
-    $(this).closest('.cartitems--list').find("[data-bundle-ts='" + actions_group_id +"']").each(function() {
-      var child_variant_id = $(this).data('cartitem-id');
-      jsonObj[child_variant_id] = 0;
-    });      
-    var data = {updates: jsonObj};
-    jQuery.ajax({
+    var line_items = [];
+    $(this).closest('.cartitems--list').find('.cart-item').each(function(index) {
+      var child_ts = $(this).data('bundle-ts');
+      if(actions_group_id == child_ts) {
+        line_items.push(index+1);
+      }      
+    });
+    
+    for (var i = 0; i < line_items.length; i++) {
+      jQuery.ajax({
+        type: 'POST',
+        url: '/cart/change.js',
+        data: { quantity: 0, line: line_items[0]},
+        async: false,
+        dataType: 'json',
+        success: function() {          
+        }
+      });         
+    }    
+    location.href = '/cart'; 
+  });
+
+  $(document).on('click', '.cart-general-remove-link', function(e) { 
+    e.preventDefault();
+     var item_varient_id = $(this).closest('.cart-item').data('cartitem-id');    
+     jQuery.ajax({
       type: 'POST',
       url: '/cart/update.js',
-      data: data,
+      data: { quantity: 0, id:item_varient_id},
+      async: false,
       dataType: 'json',
-      success: function() { 
-        location.href = '/cart'; 
+      success: function() {          
       }
-    });    
+    });   
+
+    location.href = '/cart'; 
   });
+
  });

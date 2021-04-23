@@ -25281,15 +25281,12 @@ var StaticCart_StaticCart = /*#__PURE__*/function () {
       // this.$el.on('click.cart-page', '[data-cartitem-remove]', function (event) {
       //   event.preventDefault();
 			// 	_this2._editItemQuantity(event, true);
-			// 	console.log($(this).attr('aria-label'));
-			// 	const bundle_ts = $(this).data('bm-remove-ts');			
-					
+			// 	const bundle_ts = $(this).attr('data-bm-remove-ts');
 			// 	if (typeof bundle_ts !== 'undefined' && bundle_ts !== false) {					
 			// 		$('[data-bs-remove-ts="' + bundle_ts + '"]').each(function(index, item){
 			// 			setTimeout(function(){
 			// 				$(item).trigger('click.cart-page');
-			// 			}, (index + 1) * 1000);
-						
+			// 			}, (index + 1) * 1000); 
 			// 		});
 			// 	}
         
