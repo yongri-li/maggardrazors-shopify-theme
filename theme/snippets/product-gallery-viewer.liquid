@@ -102,20 +102,20 @@
             {%
               render 'rimg',
               img: media,
-              size: 'x700',
+              size: '350x',
               lazy: true,
               background: true
             %}
-          {% endif %}
-        >
-          {%
-            render 'rimg',
-            img: media,
-            class: 'product-gallery--loaded-image'
-            size: 'x700',
-            lazy: true,
-            canvas: true
-          %}
+            {% endif %}
+            >
+            {%
+              render 'rimg',
+              img: media,
+              class: 'product-gallery--loaded-image test'
+              size: '350x',
+              lazy: false,
+              canvas: false
+            %}
         </div>
       {% when 'external_video' %}
         {% assign external_video_url = media | external_video_url %}
