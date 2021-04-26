@@ -48,14 +48,14 @@
     }    
     location.href = '/cart'; 
   });
-
+  
   $(document).on('click', '.cart-general-remove-link', function(e) { 
     e.preventDefault();
      var item_varient_id = $(this).closest('.cart-item').data('cartitem-id');    
      jQuery.ajax({
       type: 'POST',
-      url: '/cart/update.js',
-      data: { quantity: 0, id:item_varient_id},
+      url: '/cart/change.js',
+      data: { id:item_varient_id, quantity: 0},
       async: false,
       dataType: 'json',
       success: function() {          
