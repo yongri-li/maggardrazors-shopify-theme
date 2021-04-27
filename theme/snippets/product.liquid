@@ -220,8 +220,28 @@
     {% if readmore_split[0] != blank and hide_description != true %}
       <div class="product-description rte" data-product-description>
         {{ readmore_split[0] }}
+        <ul class="tabs"> 
+          {% if shipping_tab_content %}
+            <li class="active">Shipping</li> 
+          {% endif %}
+          {% if returns_tab_content %}
+            <li>Returns</li> 
+          {% endif %}
+          </ul> 
+          <ul class="tabs-content"> 
+          {% if shipping_tab_content %}
+            <li class="active"> 
+            {{ shipping_tab_content }}
+            </li> 
+          {% endif %}
+          {% if returns_tab_content %}
+            <li>{{ returns_tab_content }}</li>
+          {% endif %}
+        </ul>
       </div>
     {% endif %}
+ 
+    
 
     {% if enable_social_sharing and is_product_modal %}
       {{ share_buttons | strip_newlines }}
