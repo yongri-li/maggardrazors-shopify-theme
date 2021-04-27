@@ -24,7 +24,7 @@
   {% assign product_form_class = 'smart-payment-enabled' %}
 {% endif %}
 
-{% form 'product', product, class: product_form_class, data-product-form: '' %}
+{% form 'product', product, class: product_form_class, data-product-form: '' %}{% if content_for_header contains '.mageworx.com\/groupedproducts\/source.js?' and product.tags contains 'mw_grouped_product' %}<div class="mw-gp-container"></div>{% endif %}
   {% if product.has_only_default_variant %}
     <input
       name="id"
