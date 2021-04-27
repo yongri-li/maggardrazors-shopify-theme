@@ -34589,8 +34589,8 @@ var SearchForm_SearchForm = /*#__PURE__*/function () {
     SearchForm_classCallCheck(this, SearchForm);
 
     this.container = container;
-    this.form = this.container.querySelector('[data-live-search-form]');
-    this.filter = this.container.querySelector('[data-live-search-filter]');
+//     this.form = this.container.querySelector('[data-live-search-form]');
+//     this.filter = this.container.querySelector('[data-live-search-filter]');
     this.isLiveSearch = options.liveSearch ? options.liveSearch : false;
 
     this.setCategory = options.setCategory || function () {
