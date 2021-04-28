@@ -181,79 +181,34 @@
     </div>
 
     {% comment %}
-      Product form original location, will remain unless is 3 column layout
-    {% endcomment %}
-    <div class="product-form--regular" data-product-form-regular>
-      <div data-product-form-area>
-        {% if is_product_modal %}
-          <div data-product-quickshop-message class="product-message--container"></div>
-        {% endif %}
-
-        {% unless onboarding %}
-          {%
-            render 'product-form',
-            product: product,
-            selected_variant: selected_variant,
-            is_product_modal: is_product_modal,
-          %}
-        {% endunless %}
-
-        {% if hide_description %}
-          <a
-            href="{{ product.url | within: collection }}"
-            class="product-link"
-            data-product-details-link
-          >
-            {{ 'product.buttons.view_details' | t }}
-          </a>
-        {% endif %}
-
-        {% if enable_social_sharing and is_product_modal == false %}
-          {{ share_buttons | strip_newlines }}
-        {% endif %}
-      </div>
-    </div>
-
-    {% comment %}
       Product description field, never moves
     {% endcomment %}
     {% if readmore_split[0] != blank and hide_description != true %}
       <div class="product-description rte" data-product-description>
         {{ readmore_split[0] }}
-        <ul class="tabs"> 
-          {% if shipping_tab_content %}
-            <li class="active">Shipping</li> 
-          {% endif %}
-          {% if returns_tab_content %}
-            <li>Returns</li> 
-          {% endif %}
-          </ul> 
-          <ul class="tabs-content"> 
-          {% if shipping_tab_content %}
-            <li class="active"> 
-            {{ shipping_tab_content }}
-            </li> 
-          {% endif %}
-          {% if returns_tab_content %}
-            <li>{{ returns_tab_content }}</li>
-          {% endif %}
-        </ul>
       </div>
     {% endif %}
- 
-    
 
     {% if enable_social_sharing and is_product_modal %}
       {{ share_buttons | strip_newlines }}
     {% endif %}
-  </div>
+    
+    {% assign packing_metafields = product.metafields.global.packing_product_handle | split: "/" %}
+    {% assign product_handle_on_packing = packing_metafields[0] %}
+    {% assign qty_for_packing = packing_metafields[1] %}
+    {% assign product_for_packing = all_products[product_handle_on_packing] %}
+    
+    
+    <input type="hidden" class="product_packing_item" data-variant-id="{{product_for_packing.selected_or_first_available_variant.id}}" data-variant-qty="{{qty_for_packing}}">
+    <input type="hidden" class="current_parent_packing" data-variant-id="{{product.selected_or_first_available_variant.id}}"/>
+    <div class="product_bundle_cart_box">
+      <div class="product_bundle_add_cart">
+        <input type="number" class="product_bundle_quantity" value="1"/>
+        <button class="btn packing-cart-btn packing_bundle_cart_btn">Add Cart</button>
+      </div>
+    </div> 
 
-  {% comment %}
-    If is a 3 column layout, the form will move here at $bp-large (layout.isBreakpoint('L'))
-  {% endcomment %}
-  {% if layout == 'layout--three-col' %}
-    <div class="product-form--alt" data-product-form-alt></div>
-  {% endif %}
+  </div>
 </article>
 
 {% if readmore_split[1] != blank and hide_description != true and is_product_modal != true %}
