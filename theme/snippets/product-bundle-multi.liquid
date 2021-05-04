@@ -108,8 +108,32 @@
       <div class="products-select-box">
         {% assign product_bundle_metafields = product.metafields.global.bundle_product_handles | split: "," %}
         {% assign product_bundle_metafields_required = product.metafields.global.bundle_product_required | split: "," %}
-        {% assign first_view_step = false %}       
-        {% for product_metafield in product_bundle_metafields %}          
+        {% assign first_view_step = false %}  
+        {% assign bundle_avaialble = true  %}  
+        {% for product_metafield in product_bundle_metafields %}
+          {% assign product_metafield_arr = product_metafield | split: "/" %}
+          {% if product_metafield_arr[1] == "collection" %}
+            {% assign collection_bundle_item = collections[product_metafield_arr[0]] %}
+            {% for product_item in collection_bundle_item.products %}
+              {% unless product_item.available %}
+                {% assign bundle_avaialble = false %}
+                {% break %}
+              {% endunless %}
+            {% endfor %}
+          {% elsif product_metafield_arr[1] == 'product' %}
+            {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
+            {% unless product_bundle_item.available %}
+              {% assign bundle_avaialble = false %}
+              {% break %}
+            {% endunless %}
+          {% endif %}
+          {% if bundle_avaialble == false %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% if bundle_avaialble %}
+          {% for product_metafield in product_bundle_metafields %}          
           {% assign bundle_step_minimum_price = 0 %}
           {% assign product_metafield_arr = product_metafield | split: "/" %}
           {% assign collection_bundle_item = null %}
@@ -200,7 +224,12 @@
             <input type="number" class="product_bundle_quantity" value="1"/>
             <button class="btn select-continue-btn product_bundle_cart_btn">Add Cart</button>
           </div>
-        </div>        
+        </div> 
+        {% else %}
+        <div class="out-of-stock">
+          <span class="product-sold-out">Sold Out</span>
+        </div>
+        {% endif %}               
       </div>
     </div>
   </div>
