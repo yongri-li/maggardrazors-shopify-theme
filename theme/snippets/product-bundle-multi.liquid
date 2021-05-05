@@ -111,21 +111,16 @@
         {% assign first_view_step = false %}  
         {% assign bundle_avaialble = true  %}  
         {% for product_metafield in product_bundle_metafields %}
-          {% assign product_metafield_arr = product_metafield | split: "/" %}
-          {% if product_metafield_arr[1] == "collection" %}
-            {% assign collection_bundle_item = collections[product_metafield_arr[0]] %}
-            {% for product_item in collection_bundle_item.products %}
-              {% unless product_item.available %}
+          {% assign product_metafield_arr = product_metafield | split: "/" %}          
+          {% if product_metafield_arr[1] == 'product' %}
+            {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
+            {% assign product_required = product_bundle_metafields_required[forloop.index0] %}
+            {% if product_required == '1' %}
+              {% unless product_bundle_item.available %}
                 {% assign bundle_avaialble = false %}
                 {% break %}
               {% endunless %}
-            {% endfor %}
-          {% elsif product_metafield_arr[1] == 'product' %}
-            {% assign product_bundle_item = all_products[product_metafield_arr[0]] %}
-            {% unless product_bundle_item.available %}
-              {% assign bundle_avaialble = false %}
-              {% break %}
-            {% endunless %}
+            {% endif %}            
           {% endif %}
           {% if bundle_avaialble == false %}
             {% break %}
