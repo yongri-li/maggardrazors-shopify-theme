@@ -63,6 +63,7 @@ jQuery(function() {
     var variant_percent = $(this).find(':selected').data('option-discount-percent');
     var variant_fixed = $(this).find(':selected').data('option-discount-fixed');
     var variant_image_url = $(this).find(':selected').data('image-url');
+    var variant_title = $(this).find(':selected').data('variant-title');
     if(variant_percent != undefined) {
       variant_price = variant_price*(100 - variant_percent)/100;
       $(this).closest('.product_bundle_varient').attr('data-discount-percent', variant_percent);
@@ -73,6 +74,7 @@ jQuery(function() {
     $(this).closest('.product_bundle_varient').find('.product_bundle_variant_price').text(formatMoney(variant_old_price));
     $(this).closest('.product_bundle_varient').find('.product_bundle_discount_price').text(formatMoney(variant_price));
     $(this).closest('.product_bundle_varient').attr('data-product-variant-id', variant_id);
+    $(this).closest('.product_bundle_varient').attr('data-product-name', variant_title);
     $(this).closest('.product_bundle_varient').find('.bundle_variant_image').attr('src', variant_image_url);
   });
   $(".select-continue-btn").on('click', function() {
