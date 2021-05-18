@@ -237,6 +237,22 @@ jQuery(function() {
     //make the first appeared step active
     if ($('.product_bundle_items').length > 0) {
       $('.product_bundle_items').each(function(index) {
+
+        //update the action buttons class
+
+        if($('.product_bundle_items').length == index+1) {
+          var $select_continue_btn = $(this).find('.select-continue-btn');
+          var $select_not_need_btn = $(this).find('.select-not-need-btn');
+          if($select_continue_btn.hasClass('last-not-bundle')) {
+            $select_continue_btn.removeClass('last-not-bundle');
+            $select_continue_btn.addClass('last-bundle--mark');
+          }
+          if($select_not_need_btn.hasClass('last-not-bundle')) {
+            $select_not_need_btn.removeClass('last-not-bundle');
+            $select_not_need_btn.addClass('last-bundle--mark');
+          }
+        }
+
         if (index ==  0) {
           if($(this).find('.product_bundle_items_header').has('product_bundle_items_header_disable_no_active')) {
             $(this).find('.product_bundle_items_header').removeClass('product_bundle_items_header_disable_no_active');
@@ -246,7 +262,7 @@ jQuery(function() {
           }  
           if($(this).find('.product_bundle_wrap').hasClass('product_bundle_wrap_hide')) {
             $(this).find('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');
-          }     
+          }            
         }
       })
     } else {
