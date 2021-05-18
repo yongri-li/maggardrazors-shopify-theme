@@ -141,7 +141,7 @@
               {% if product_quantity_num == 0 %}
                 {% assign product_quantity_num = 1 %}
               {% endif %}
-              {% if product_bundle_metafields_required[forloop.index0] == '1' %}
+              {% if product_bundle_metafields_required[forloop.index0] == '1' and product_bundle_item.variants.size == 1 %}
                 {% assign variant_percent_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_percent | split: "," %}                      
                 {% assign variant_fixed_discounts = product_bundle_item.selected_or_first_available_variant.metafields.bundle.discount_fixed | split: "," %}
                 {% assign v_percent_discount = null %}
