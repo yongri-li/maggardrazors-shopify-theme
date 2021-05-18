@@ -20,7 +20,7 @@
   {% endif %}
 {% endfor %}
 <div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{{product_item.title | escape }}" data-product-price={{product_item.price}}>
-  <img src="{{product_item.featured_image | img_url : '100x'}}"/>
+  <img class="bundle_variant_image" src="{{product_item.featured_image | img_url : '100x'}}"/>
   <span class="product_bundle_variant_title">{{product_item.title}}</span>
   {% if v_percent_discount != blank %}
     {% assign discount_percent = 100.0 | minus: v_percent_discount %}
@@ -77,7 +77,8 @@
           {% endif %}
         {% endif %}        
         {% if product_variant_option.available %}
-        <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}}>{{product_variant_option.title}}</option>
+        
+        <option class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}} {% if product_variant_option.image != blank %} data-image-url="{{product_variant_option.image | img_url:'100x'}}" {% endif %}>{{product_variant_option.title}}</option>
         {% endif %}
       {% endfor %}
     </select>
