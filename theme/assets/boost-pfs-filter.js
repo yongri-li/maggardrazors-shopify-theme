@@ -170,12 +170,11 @@ var boostPFSTemplate = {
 		}
 		priceHtml += '</div>';
 		priceHtml += '<div class="price--main" data-price>';
-		var price = '<span class="money">' + Utils.formatMoney(data.price_min) + '</span>';
-
-		if(Utils.getProductMetafield(data, 'global', 'minimum_price') != '') {
-			console.log('minimum_price:', Utils.getProductMetafield(data, 'global', 'minimum_price'))
-		}
-
+		if(Utils.getProductMetafield(data, 'global', 'minimum_price') !=  null) {
+			var price = '<span class="money"> From ' + formatMoney(Utils.getProductMetafield(data, 'global', 'minimum_price')) + '</span>';
+		} else {
+			var price = '<span class="money">' + Utils.formatMoney(data.price_min) + '</span>';
+		}		
 		if (priceVaries) {
 			priceHtml += boostPFSConfig.label.range_html.replace(/{{ price }}/g, price);
 		} else {
