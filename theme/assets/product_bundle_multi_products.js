@@ -142,7 +142,8 @@ jQuery(function() {
           'quantity':parseInt(quantity, 0),
           "properties" : {
             '_bundle_ts': timestamp,
-            '_bundle_master': 'true'
+            '_bundle_master': 'true',
+            '_minimum_metafield':$('.product-details').data('minimum-price'),
           }
         }
       ]

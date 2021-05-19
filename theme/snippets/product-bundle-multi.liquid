@@ -93,7 +93,7 @@
     hover_zoom: gallery_hover_zoom
   %}
   <div class="product-main">
-    <div class="product-details" data-product-details data-product-variant-id={{product.first_available_variant.id}}>
+    <div class="product-details" data-product-details data-product-variant-id="{{product.first_available_variant.id}}" data-minimum-price="{{product.metafields.global.minimum_price}}">
       <h2 class="product-bundle-title">
         {{ product.title }}
       </h2> 

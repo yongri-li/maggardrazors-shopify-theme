@@ -192,8 +192,14 @@
           class="money {% if item_has_discounts %}cart-item--discount-price{% endif %}"
           aria-live="polite"
           data-cartitem-total
-        >
+        > 
+          <div class="total_price_group">
+            {% if item.properties['_minimum_metafield'] != blank %}
+            <span style="text-decoration: line-through;">{{item.properties['_minimum_metafield'] | times:100.0 | money }}</span><br>
+          {% endif %}
           {{ item.final_line_price | money }}
+          </div>
+          
         </div>
       </div>
       
