@@ -19,7 +19,7 @@
     {% break %}
   {% endif %}
 {% endfor %}
-<div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{% if product_item.variants.size > 1 %} {{variant_of_collection.title | escape }} {% else %} {{product_item.title}} {% endif %}" data-product-price={{product_item.price}}>
+<div class="product_bundle_varient" data-product-variant-id="{{variant_of_collection.id}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}" data-product-name="{% if product_item.variants.size > 1 %} {{product_item.title}}, {{variant_of_collection.title | escape }} {% else %} {{product_item.title}} {% endif %}" data-product-price={{product_item.price}}>
   <img class="bundle_variant_image" src="{{product_item.featured_image | img_url : '100x'}}"/>
   <span class="product_bundle_variant_title">{{product_item.title}}</span>
   {% if v_percent_discount != blank %}

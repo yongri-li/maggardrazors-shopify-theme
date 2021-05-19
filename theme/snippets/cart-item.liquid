@@ -50,9 +50,13 @@
 
     <div class="cart-item--content">
       <h2 class="cart-item--content-title">
-        <a href="{{ item.url }}">
-          {{ item.product.title }}
-        </a>
+        {% if is_bundleslave %}
+          <span>{{ item.product.title }}</span>
+        {% else %}
+          <a href="{{ item.url }}">
+            {{ item.product.title }}
+          </a>
+        {% endif %}        
       </h2>
 
       {% unless item.product.has_only_default_variant %}
