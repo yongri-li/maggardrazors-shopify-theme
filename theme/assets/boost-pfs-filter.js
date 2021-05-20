@@ -102,11 +102,17 @@ var boostPFSTemplate = {
 		itemHtml = itemHtml.replace(/{{itemActions}}/g, itemActionsHtml);
 
 		// Add custom class
-		var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		if(Utils.getProductMetafield(data, 'seo', 'hidden') ==  '1') {
+			var customClass = 'seoItemHide imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		} else {
+			var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		}				
 		if (onSale) customClass += ' productitem--sale';
 		if (boostPFSConfig.custom.emphasize_price) customClass += ' productitem--emphasis';
 		if (boostPFSConfig.custom.atc_display == 'always' || boostPFSConfig.custom.quick_shop_display == 'always') customClass += ' show-actions--mobile';
 		itemHtml = itemHtml.replace(/{{customClass}}/g, customClass);
+
+		
 
 		var itemImages = '';
 		if (images.length > 0) {
