@@ -56,12 +56,14 @@ jQuery(function() {
     $(this).closest('.product_bundle_wrap').children('.product-select-actions').children('.select-continue-btn').removeAttr("disabled");
     $(this).closest('.product_bundle_wrap').children('.product-select-actions').children('.select-continue-btn').removeClass("select-continue-btn-disable");
   });
-  $('.product_variant_select').on('change', function() {
+  $('.product_variant_select').on('change', function() {    
     var variant_id = $(this).find(':selected').data('product-variant-option-id');
     var variant_price = $(this).find(':selected').data('product-variant-option-price');
     var variant_old_price = variant_price;
     var variant_percent = $(this).find(':selected').data('option-discount-percent');
     var variant_fixed = $(this).find(':selected').data('option-discount-fixed');
+    var variant_image_url = $(this).find(':selected').data('image-url');
+    var variant_title = $(this).find(':selected').data('variant-title');
     if(variant_percent != undefined) {
       variant_price = variant_price*(100 - variant_percent)/100;
       $(this).closest('.product_bundle_varient').attr('data-discount-percent', variant_percent);
@@ -72,6 +74,9 @@ jQuery(function() {
     $(this).closest('.product_bundle_varient').find('.product_bundle_variant_price').text(formatMoney(variant_old_price));
     $(this).closest('.product_bundle_varient').find('.product_bundle_discount_price').text(formatMoney(variant_price));
     $(this).closest('.product_bundle_varient').attr('data-product-variant-id', variant_id);
+    var product_parent_name = $(this).closest('.product_bundle_varient').data('product-parent-name');
+    $(this).closest('.product_bundle_varient').attr('data-product-name', product_parent_name+", "+variant_title);
+    $(this).closest('.product_bundle_varient').find('.bundle_variant_image').attr('src', variant_image_url);
   });
   $(".select-continue-btn").on('click', function() {
     temp_value = 0;
@@ -88,9 +93,9 @@ jQuery(function() {
       $('.product_bundle_reviews').empty();
       $('.product_bundle_varient_selection').each(function(index) {
         if($(this).data('product-quantity') != undefined) {
-          $('<div>'+(index+1)+". " + $(this).data('product-name')+'( <b>Quantity</b>: '+$(this).data('product-quantity')+' )</div>').appendTo($('.product_bundle_reviews'));
+          $('<div>'+(index+1)+". " + $(this).attr('data-product-name')+'( <b>Quantity</b>: '+$(this).data('product-quantity')+' )</div>').appendTo($('.product_bundle_reviews'));
         } else {
-          $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+          $('<div>'+(index+1)+". " + $(this).attr('data-product-name')+'</div>').appendTo($('.product_bundle_reviews'));
         }        
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
@@ -113,14 +118,14 @@ jQuery(function() {
     if(classes.includes('last-not-bundle')) {
       $('.product_bundle_reviews').empty();
       $('.product_bundle_varient_selection').each(function(index) {
-        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+        $('<div>'+(index+1)+". " + $(this).attr('data-product-name')+'</div>').appendTo($('.product_bundle_reviews'));
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
     } 
     if(classes.includes('last-bundle--mark')) {
       $('.product_bundle_reviews').empty();
       $('.product_bundle_varient_selection').each(function(index) {
-        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+        $('<div>'+(index+1)+". " + $(this).attr('data-product-name')+'</div>').appendTo($('.product_bundle_reviews'));
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
       $('.product_select_results').removeClass('product_select_results_hide');
@@ -137,7 +142,8 @@ jQuery(function() {
           'quantity':parseInt(quantity, 0),
           "properties" : {
             '_bundle_ts': timestamp,
-            '_bundle_master': 'true'
+            '_bundle_master': 'true',
+            '_minimum_metafield':$('.product-details').data('minimum-price'),
           }
         }
       ]
@@ -237,6 +243,22 @@ jQuery(function() {
     //make the first appeared step active
     if ($('.product_bundle_items').length > 0) {
       $('.product_bundle_items').each(function(index) {
+
+        //update the action buttons class
+
+        if($('.product_bundle_items').length == index+1) {
+          var $select_continue_btn = $(this).find('.select-continue-btn');
+          var $select_not_need_btn = $(this).find('.select-not-need-btn');
+          if($select_continue_btn.hasClass('last-not-bundle')) {
+            $select_continue_btn.removeClass('last-not-bundle');
+            $select_continue_btn.addClass('last-bundle--mark');
+          }
+          if($select_not_need_btn.hasClass('last-not-bundle')) {
+            $select_not_need_btn.removeClass('last-not-bundle');
+            $select_not_need_btn.addClass('last-bundle--mark');
+          }
+        }
+
         if (index ==  0) {
           if($(this).find('.product_bundle_items_header').has('product_bundle_items_header_disable_no_active')) {
             $(this).find('.product_bundle_items_header').removeClass('product_bundle_items_header_disable_no_active');
@@ -246,13 +268,13 @@ jQuery(function() {
           }  
           if($(this).find('.product_bundle_wrap').hasClass('product_bundle_wrap_hide')) {
             $(this).find('.product_bundle_wrap').removeClass('product_bundle_wrap_hide');
-          }     
+          }            
         }
       })
     } else {
       $('.product_bundle_reviews').empty();
       $('.product_bundle_varient_selection').each(function(index) {
-        $('<div>'+(index+1)+". " + $(this).data('product-name')+'</div>').appendTo($('.product_bundle_reviews'));
+        $('<div>'+(index+1)+". " + $(this).attr('data-product-name')+'</div>').appendTo($('.product_bundle_reviews'));
       });
       $('.product_bundle_cart_box').removeClass('product_bundle_add_cart_box_hide');
       $('.product_select_results').removeClass('product_select_results_hide');

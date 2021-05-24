@@ -203,8 +203,12 @@
     <input type="hidden" class="current_parent_packing" data-variant-id="{{product.selected_or_first_available_variant.id}}"/>
     <div class="product_bundle_cart_box">
       <div class="product_bundle_add_cart">
-        <input type="number" class="product_bundle_quantity" value="1"/>
-        <button class="btn packing-cart-btn packing_bundle_cart_btn">Add Cart</button>
+        {% if product_for_packing.available %}
+          <input type="number" class="product_bundle_quantity" value="1"/>
+          <button class="btn packing-cart-btn packing_bundle_cart_btn">Add Cart</button>
+        {% else %}
+          <span class="product-sold-out">Sold Out</span>
+        {% endif %}
       </div>
     </div> 
 

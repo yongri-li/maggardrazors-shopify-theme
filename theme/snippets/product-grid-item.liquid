@@ -24,6 +24,7 @@
   {% assign product_link = product.url | within: collection %}
   {% assign product_description = product.description | strip_html %}
   {% assign product_description_size = product.description | strip_html | size %}
+  {% assign product_minimum_price = product.metafields.global.minimum_price %}
   {% if recently_viewed == true %}
     {%- capture recently_viewed_header -%}
     <div class="product-recently-viewed-card-time" data-product-handle="{{product.handle}}">
@@ -286,7 +287,8 @@
         compare_at_price_varies: compare_at_price_varies,
         on_sale: on_sale,
         emphasize_price: emphasize_price,
-        show_original: consistent_saved
+        show_original: consistent_saved,
+        product_minimum_price:product_minimum_price
       %}
     {%- endcapture  -%}
 

@@ -90,7 +90,8 @@ var boostPFSTemplate = {
 					break;
 				}
 			}
-		}
+		}		
+		
 		/*** End Prepare data ***/
 
 		// Get Template
@@ -101,11 +102,17 @@ var boostPFSTemplate = {
 		itemHtml = itemHtml.replace(/{{itemActions}}/g, itemActionsHtml);
 
 		// Add custom class
-		var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		if(Utils.getProductMetafield(data, 'seo', 'hidden') ==  '1') {
+			var customClass = 'seoItemHide imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		} else {
+			var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+		}				
 		if (onSale) customClass += ' productitem--sale';
 		if (boostPFSConfig.custom.emphasize_price) customClass += ' productitem--emphasis';
 		if (boostPFSConfig.custom.atc_display == 'always' || boostPFSConfig.custom.quick_shop_display == 'always') customClass += ' show-actions--mobile';
 		itemHtml = itemHtml.replace(/{{customClass}}/g, customClass);
+
+		
 
 		var itemImages = '';
 		if (images.length > 0) {
@@ -169,7 +176,11 @@ var boostPFSTemplate = {
 		}
 		priceHtml += '</div>';
 		priceHtml += '<div class="price--main" data-price>';
-		var price = '<span class="money">' + Utils.formatMoney(data.price_min) + '</span>';
+		if(Utils.getProductMetafield(data, 'global', 'minimum_price') !=  null) {
+			var price = '<span class="money"> From ' + formatMoney(Utils.getProductMetafield(data, 'global', 'minimum_price')) + '</span>';
+		} else {
+			var price = '<span class="money">' + Utils.formatMoney(data.price_min) + '</span>';
+		}		
 		if (priceVaries) {
 			priceHtml += boostPFSConfig.label.range_html.replace(/{{ price }}/g, price);
 		} else {
