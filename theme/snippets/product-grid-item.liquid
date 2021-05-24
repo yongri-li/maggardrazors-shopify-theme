@@ -224,6 +224,7 @@
   {% if recently_viewed %}
     data-recently-viewed-card
   {% endif %}
+  style="{% if product.tags contains 'hidden' %} display: none; {% endif %}"
 >
   <div class="productitem" data-product-item-content>
     {{ recently_viewed_header }}
