@@ -218,7 +218,6 @@ jQuery(function() {
     $('.product_hidden_product_selection').each(function() {
       var hidden_variant_quantity = parseFloat($(this).data('product-quantity'));
       var hidden_price = parseFloat($(this).data('hidden-product-price'))*hidden_variant_quantity;
-      console.log("quantity____", hidden_variant_quantity);
       if($(this).data('discount-percent') != "") {
         var addPercentAmount = hidden_price*(100 - $(this).data('discount-percent'))/100;
         total_discounted_price += addPercentAmount;
@@ -236,7 +235,6 @@ jQuery(function() {
     $('.product-bundle-price .product_bundle_discount_price').text(formatMoney(total_discounted_price));
 
     $('.product_bundle_wrap').each(function() {
-      //console.log($(this).find('.item_discount_value').data('item-discount-price')+",");
       var temp_minimum = 0;
       var dont_required = $(this).find('.select-not-need-btn').length;
       if(dont_required > 0) {
