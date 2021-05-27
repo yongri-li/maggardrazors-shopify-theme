@@ -163,7 +163,7 @@
                   {% endif %}
                 {% endfor %}
 
-                <input type="hidden" class="product_bundle_varient_selection" data-product-name='{{product_bundle_item.title | escape}}' data-product-variant-id="{{product_bundle_item.selected_or_first_available_variant.id}}" data-product-quantity="{{product_quantity_num}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}"/>
+                <input type="hidden" class="product_bundle_varient_selection product_hidden_product_selection" data-product-name='{{product_bundle_item.title | escape}}' data-product-variant-id="{{product_bundle_item.selected_or_first_available_variant.id}}" data-hidden-product-price="{{product_bundle_item.price}}" data-product-quantity="{{product_quantity_num}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}"/>
                 {% continue %}
               {% endif %}
             {% endif %}
