@@ -32,7 +32,7 @@
   data-cartitem-price="{{ item.price }}"
   data-bundle-ts="{{bundle_ts}}">
   <figure class="cart-item--image-wrapper">
-    <a href="{{ item.url }}">
+    <a href="{{ item.url }}" style="pointer-events: none">
       {% if item.image %}
         {%
           render 'rimg',
