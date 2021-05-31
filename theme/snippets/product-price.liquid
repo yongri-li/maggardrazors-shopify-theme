@@ -49,6 +49,7 @@
   <div class="price--main" data-price>
     {%- capture price_html -%}
       <span class="money">
+        {% assign product_minimum_price = product_minimum_price | plus:0 %}
         {% if product_minimum_price > 0 %}
           From {{ product_minimum_price | times:100.0 | money }}
         {% else %}

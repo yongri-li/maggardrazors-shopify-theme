@@ -369,6 +369,11 @@
           {% assign quick_buy_classes = quick_buy_classes | append: ' disabled' %}
         {% endunless %}
 
+        {% if product.metafields.global.product_type == 'bundle' %}
+          {% assign quick_shop_classes = quick_shop_classes | append: ' disabled' %}
+          {% assign quick_buy_classes = quick_buy_classes | append: ' disabled' %}
+        {% endif %}
+
         <div class="productitem--actions" data-product-actions>
           {% if section.settings.grid_list %}
             <div class="productitem--listview-price">
@@ -398,6 +403,7 @@
             >
               <button
                 class="{{ quick_shop_classes }}"
+                {% if product.metafields.global.product_type == 'bundle' %} disabled {% endif %}
                 data-quickshop-full
                 {% if settings.gallery_thumbnail_position == 'left' %}data-thumbs-left{% endif %}
                 type="button"
@@ -417,6 +423,7 @@
             >
               <button
                 class="{{ quick_buy_classes }}"
+                {% if product.metafields.global.product_type == 'bundle' %} disabled {% endif %}
                 type="button"
                 aria-label="{{ quick_buy_text }}"
                 {% unless has_variants %}
