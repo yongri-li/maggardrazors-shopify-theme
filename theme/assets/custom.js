@@ -26,6 +26,7 @@
  $(document).ready(function() {
   $(document).on('click', '.cart-custom_bundle-remove-link', function(e) { 
     e.preventDefault();
+    console.log("..................remove...............")
     var actions_group_id = $(this).data('bm-remove-ts');
     var line_items = [];
     $(this).closest('.cartitems--list').find('.cart-item').each(function(index) {

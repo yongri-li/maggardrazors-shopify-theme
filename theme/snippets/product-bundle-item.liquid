@@ -76,9 +76,10 @@
             {% assign variant_minimum_price = variant_discounted_price %}
           {% endif %}
         {% endif %}        
-        {% if product_variant_option.available %}
-        
-        <option class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}} {% if product_variant_option.image != blank %} data-image-url="{{product_variant_option.image | img_url:'100x'}}" {% endif %} data-variant-title="{{product_variant_option.title}}">{{product_variant_option.title}}</option>
+        {% if product_variant_option.available %}        
+          <option class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}} {% if product_variant_option.image != blank %} data-image-url="{{product_variant_option.image | img_url:'100x'}}" {% endif %} data-variant-title="{{product_variant_option.title}}">{{product_variant_option.title}}</option>
+        {% else %}
+          <option class="product_variant_option" data-product-variant-option-price={{product_variant_option.price}} {% if v_option_percent_discount != blank %} data-option-discount-percent={{v_option_percent_discount}} {% endif %}  {% if v_option_fixed_discount != blank %} data-option-discount-fixed={{v_option_fixed_discount}} {% endif %} data-product-variant-option-id={{product_variant_option.id}} {% if product_variant_option.image != blank %} data-image-url="{{product_variant_option.image | img_url:'100x'}}" {% endif %} data-variant-title="{{product_variant_option.title}}">Out of Stock: {{product_variant_option.title}}</option>
         {% endif %}
       {% endfor %}
     </select>

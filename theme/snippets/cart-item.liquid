@@ -229,8 +229,12 @@
         {% if item.properties['_bundle_slave'] == 'true' %}
           {% assign is_bundleslave = true %}
         {% endif %}
-        <a
+        {%- comment -%}
+          <a
           href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0"
+        {%- endcomment -%}
+        <a
+          href=""
           class="cart-item--remove-link {% if is_bundlemaster %} cart-custom_bundle-remove-link {% else %} cart-general-remove-link{% endif %} {% if is_bundleslave %} visually-hidden {% endif %}"
           data-cartitem-remove
           data-no-instant

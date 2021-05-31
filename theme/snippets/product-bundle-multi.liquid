@@ -199,8 +199,10 @@
                   {% endif %}
                   <div class="product-select-actions">
                     {% assign index_num = forloop.index | minus: 1  %}
-                    {% assign requied_bundle_product = product_bundle_metafields_required[index_num] %}                  
-                      <button type="button" class="btn select-continue-btn select-continue-btn-disable {{last_element}} requied_{{requied_bundle_product}}" disabled>CONTINUE</button>
+                    {% assign requied_bundle_product = product_bundle_metafields_required[index_num] %}  
+                      {% unless product_bundle_item != blank and product_bundle_item.available == false %}  
+                        <button type="button" class="btn select-continue-btn select-continue-btn-disable {{last_element}} requied_{{requied_bundle_product}}" disabled>CONTINUE</button>
+                      {% endunless%}  
                     {% if requied_bundle_product == "0" %}                    
                       <button type="button" class="btn select-not-need-btn {{last_element}} requied_{{requied_bundle_product}}">DON'T NEED</button>
                     {% endif %}

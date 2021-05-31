@@ -2,7 +2,7 @@
   {% for item in cart.items %}
     {%
       render 'cart-item',
-      item: item
+      item: item, forloop:forloop
     %}
   {% endfor %}
 </ul>
