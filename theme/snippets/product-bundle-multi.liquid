@@ -97,7 +97,9 @@
       <h2 class="product-bundle-title">
         {{ product.title }}
       </h2> 
-      <span class="bundle_minimum_price"></span>
+      {% if product.metafields.global.minimum_price != blank %}
+        <span class="bundle_minimum_price">From {{product.metafields.global.minimum_price}}</span>
+      {% endif %}
       <div class="product-bundle-price">
         <span class="product_bundle_variant_price">{{ product.price | money }}</span>
         <span class="product_bundle_discount_price">{{ product.price | money }}</span>

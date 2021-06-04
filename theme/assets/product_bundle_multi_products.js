@@ -255,7 +255,7 @@ jQuery(function() {
       total_minimum_price+=parseFloat(temp_minimum);
     });
 
-    $('.bundle_minimum_price').text('From '+ formatMoney(total_minimum_price + total_discounted_price));
+    //$('.bundle_minimum_price').text('From '+ formatMoney(total_minimum_price + total_discounted_price));
     //console.log("Total...", total_minimum_price)
 
     //make the first appeared step active
