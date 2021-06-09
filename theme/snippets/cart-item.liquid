@@ -32,7 +32,21 @@
   data-cartitem-price="{{ item.price }}"
   data-bundle-ts="{{bundle_ts}}">
   <figure class="cart-item--image-wrapper">
-    <a href="{{ item.url }}">
+    {% if is_bundlemaster %}
+      <a href="{{ item.url }}">
+        {% if item.image %}
+          {%
+            render 'rimg',
+            img: item.image,
+            alt: item.title,
+            size: '120x'
+          %}
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'placeholder--image' }}
+        {% endif %}
+      </a>
+    {% else %}
+    <a>
       {% if item.image %}
         {%
           render 'rimg',
@@ -44,6 +58,8 @@
         {{ 'image' | placeholder_svg_tag: 'placeholder--image' }}
       {% endif %}
     </a>
+    {% endif %}
+    
   </figure>
 
   <div class="cart-item--inner">
@@ -213,8 +229,12 @@
         {% if item.properties['_bundle_slave'] == 'true' %}
           {% assign is_bundleslave = true %}
         {% endif %}
-        <a
+        {%- comment -%}
+          <a
           href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity=0"
+        {%- endcomment -%}
+        <a
+          href=""
           class="cart-item--remove-link {% if is_bundlemaster %} cart-custom_bundle-remove-link {% else %} cart-general-remove-link{% endif %} {% if is_bundleslave %} visually-hidden {% endif %}"
           data-cartitem-remove
           data-no-instant

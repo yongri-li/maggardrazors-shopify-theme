@@ -97,7 +97,9 @@
       <h2 class="product-bundle-title">
         {{ product.title }}
       </h2> 
-      <span class="bundle_minimum_price"></span>
+      {% if product.metafields.global.minimum_price != blank %}
+        <span class="bundle_minimum_price">From {{product.metafields.global.minimum_price}}</span>
+      {% endif %}
       <div class="product-bundle-price">
         <span class="product_bundle_variant_price">{{ product.price | money }}</span>
         <span class="product_bundle_discount_price">{{ product.price | money }}</span>
@@ -163,7 +165,7 @@
                   {% endif %}
                 {% endfor %}
 
-                <input type="hidden" class="product_bundle_varient_selection" data-product-name='{{product_bundle_item.title | escape}}' data-product-variant-id="{{product_bundle_item.selected_or_first_available_variant.id}}" data-product-quantity="{{product_quantity_num}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}"/>
+                <input type="hidden" class="product_bundle_varient_selection product_hidden_product_selection" data-product-name='{{product_bundle_item.title | escape}}' data-product-variant-id="{{product_bundle_item.selected_or_first_available_variant.id}}" data-hidden-product-price="{{product_bundle_item.price}}" data-product-quantity="{{product_quantity_num}}" data-discount-percent="{{ v_percent_discount }}" data-discount-fixed="{{ v_fixed_discount }}"/>
                 {% continue %}
               {% endif %}
             {% endif %}
@@ -199,8 +201,10 @@
                   {% endif %}
                   <div class="product-select-actions">
                     {% assign index_num = forloop.index | minus: 1  %}
-                    {% assign requied_bundle_product = product_bundle_metafields_required[index_num] %}                  
-                      <button type="button" class="btn select-continue-btn select-continue-btn-disable {{last_element}} requied_{{requied_bundle_product}}" disabled>CONTINUE</button>
+                    {% assign requied_bundle_product = product_bundle_metafields_required[index_num] %}  
+                      {% unless product_bundle_item != blank and product_bundle_item.available == false %}  
+                        <button type="button" class="btn select-continue-btn select-continue-btn-disable {{last_element}} requied_{{requied_bundle_product}}" disabled>CONTINUE</button>
+                      {% endunless%}  
                     {% if requied_bundle_product == "0" %}                    
                       <button type="button" class="btn select-not-need-btn {{last_element}} requied_{{requied_bundle_product}}">DON'T NEED</button>
                     {% endif %}

@@ -195,15 +195,14 @@
     
     {% assign packing_metafields = product.metafields.global.packing_product_handle | split: "/" %}
     {% assign product_handle_on_packing = packing_metafields[0] %}
-    {% assign qty_for_packing = packing_metafields[1] %}
-    {% assign product_for_packing = all_products[product_handle_on_packing] %}
-    
+    {% assign qty_for_packing = packing_metafields[1] | plus: 0 %}
+    {% assign product_for_packing = all_products[product_handle_on_packing] %}    
     
     <input type="hidden" class="product_packing_item" data-variant-id="{{product_for_packing.selected_or_first_available_variant.id}}" data-variant-qty="{{qty_for_packing}}">
     <input type="hidden" class="current_parent_packing" data-variant-id="{{product.selected_or_first_available_variant.id}}"/>
     <div class="product_bundle_cart_box">
       <div class="product_bundle_add_cart">
-        {% if product_for_packing.available %}
+        {% if product_for_packing.available and product_for_packing.selected_or_first_available_variant.inventory_quantity >= qty_for_packing %}
           <input type="number" class="product_bundle_quantity" value="1"/>
           <button class="btn packing-cart-btn packing_bundle_cart_btn">Add Cart</button>
         {% else %}

@@ -102,11 +102,8 @@ var boostPFSTemplate = {
 		itemHtml = itemHtml.replace(/{{itemActions}}/g, itemActionsHtml);
 
 		// Add custom class
-		if(Utils.getProductMetafield(data, 'seo', 'hidden') ==  '1') {
-			var customClass = 'seoItemHide imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
-		} else {
-			var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
-		}				
+		var customClass = 'imagestyle--' + boostPFSConfig.custom.product_grid_image_style;
+				
 		if (onSale) customClass += ' productitem--sale';
 		if (boostPFSConfig.custom.emphasize_price) customClass += ' productitem--emphasis';
 		if (boostPFSConfig.custom.atc_display == 'always' || boostPFSConfig.custom.quick_shop_display == 'always') customClass += ' show-actions--mobile';
@@ -302,7 +299,11 @@ var boostPFSTemplate = {
 			if (!data.available) {
 				quick_buy_text = boostPFSConfig.label.sold_out;
 				quick_buy_classes = quick_buy_classes + ' disabled';
-			}
+			}	
+			if (Utils.getProductMetafield(data, 'global', 'product_type') == 'bundle') {
+				quick_look_classes = quick_look_classes + ' disabled';
+				quick_buy_classes = quick_buy_classes + ' disabled';
+			}		
 			actionsHtml += '<div class="productitem--actions" data-product-actions>';
 			if (boostPFSConfig.custom.grid_list) {
 				actionsHtml += '<div class="productitem--listview-price">{{noEmphasizePrice}}</div>';
@@ -313,6 +314,9 @@ var boostPFSTemplate = {
 				if (boostPFSConfig.custom.quick_shop_display == 'desktop') actionsHtml += 'productitem-action--desktop';
 				actionsHtml += 	'">' +
 									'<button class="'+ quick_look_classes +'" data-quickshop-full ';
+				if(Utils.getProductMetafield(data, 'global', 'product_type') == 'bundle') {
+					actionsHtml += 'disabled'
+				}
 				if (boostPFSConfig.custom.gallery_thumbnail_position == 'left') actionsHtml += 'data-thumbs-left';
 				actionsHtml +=		' data-id="{{itemId}}" type="button" tabindex="1">' + 
 										quick_look_text +
@@ -330,9 +334,9 @@ var boostPFSTemplate = {
 				actionsHtml += 	'">' +
 									'<button class="' + quick_buy_classes + '" tabindex="1" type="button" aria-label="' + quick_buy_text + '"' +
 									temp + 'data-variant-id="' + data.variants[0].id + '"';
-				if (!data.available) {
+				if (!data.available || Utils.getProductMetafield(data, 'global', 'product_type') == 'bundle') {
 					actionsHtml += ' disabled';
-				}
+				}				
 				actionsHtml += '>';
 				actionsHtml += '<span class="atc-button--text">' + quick_buy_text + '</span>';
 				actionsHtml += '<span class="atc-button--icon">';
