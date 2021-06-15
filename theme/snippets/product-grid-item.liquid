@@ -306,7 +306,7 @@
         </a>
       </h2>
 
-      {% if settings.product_show_vendor and product.vendor != blank %}
+      {% if settings.product_show_vendor and product.vendor != blank and product.vendor != '(Multiple)' %}
         <span class="productitem--vendor">
           {{ product_vendor | link_to_vendor }}
         </span>

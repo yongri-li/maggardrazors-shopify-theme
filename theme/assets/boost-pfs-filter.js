@@ -199,7 +199,7 @@ var boostPFSTemplate = {
 
 		// Add vendor
 		var itemVendorHtml = '';
-		if (boostPFSConfig.custom.show_vendor && data.vendor !== '') {
+		if (boostPFSConfig.custom.show_vendor && data.vendor !== '' && data.vendor !== '(Multiple)') {
 			itemVendorHtml += '<span class="productitem--vendor"><a href="' + boostPFSConfig.shop.url + '/collections/vendors?q=' + Utils.encodeURIParamValue(data.vendor) + '">' + data.vendor  + '</a></span>';
 		}
 		itemHtml = itemHtml.replace(/{{itemVendor}}/g, itemVendorHtml);
