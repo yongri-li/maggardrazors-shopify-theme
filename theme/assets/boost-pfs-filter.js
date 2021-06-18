@@ -34,7 +34,8 @@ var boostPFSTemplate = {
 										'</h2>' +
 										'{{itemVendor}}' +
 										'{{noEmphasizePrice}}'+
-										'{{itemReviews}}' +
+//										'{{itemReviews}}' +
+  										'<span class="stamped-product-reviews-badge" data-id="{{itemId}}"></span>' +
 										'{{itemDescription}}' +
 									'</div>' +
 									'{{itemActions}}' +
@@ -205,23 +206,23 @@ var boostPFSTemplate = {
 		itemHtml = itemHtml.replace(/{{itemVendor}}/g, itemVendorHtml);
 
 		// Add review rating
-		var itemReviewsHtml = '';
-		if (boostPFSConfig.custom.product_ratings_reviews && boostPFSConfig.custom.product_ratings_star_display == 'all') {
-			itemReviewsHtml +=  '<div class="productitem--ratings">' +
-									'<span class="shopify-product-reviews-badge" data-id="{{itemId}}">' +
-										'<span class="spr-badge">' +
-											'<span class="spr-starrating spr-badge-starrating">' +
-												'<i class="spr-icon spr-icon-star-empty"></i>' +
-												'<i class="spr-icon spr-icon-star-empty"></i>' +
-												'<i class="spr-icon spr-icon-star-empty"></i>' +
-												'<i class="spr-icon spr-icon-star-empty"></i>' +
-												'<i class="spr-icon spr-icon-star-empty"></i>' +
-											'</span>' +
-										'</span>' +
-									'</span>' +
-								'</div>';
-		}
-		itemHtml = itemHtml.replace(/{{itemReviews}}/g, itemReviewsHtml);
+// 		var itemReviewsHtml = '';
+// 		if (boostPFSConfig.custom.product_ratings_reviews && boostPFSConfig.custom.product_ratings_star_display == 'all') {
+// 			itemReviewsHtml +=  '<div class="productitem--ratings">' +
+// 									'<span class="shopify-product-reviews-badge" data-id="{{itemId}}">' +
+// 										'<span class="spr-badge">' +
+// 											'<span class="spr-starrating spr-badge-starrating">' +
+// 												'<i class="spr-icon spr-icon-star-empty"></i>' +
+// 												'<i class="spr-icon spr-icon-star-empty"></i>' +
+// 												'<i class="spr-icon spr-icon-star-empty"></i>' +
+// 												'<i class="spr-icon spr-icon-star-empty"></i>' +
+// 												'<i class="spr-icon spr-icon-star-empty"></i>' +
+// 											'</span>' +
+// 										'</span>' +
+// 									'</span>' +
+// 								'</div>';
+// 		}
+// 		itemHtml = itemHtml.replace(/{{itemReviews}}/g, itemReviewsHtml);
 
 		// Add description    
 		var itemDescriptionHtml = jQ('<div></div>').html(data.body_html).text(); // Strips html tags
@@ -654,7 +655,11 @@ var boostPFSTemplate = {
 		//      /***/ })
 		//      /******/ });
 		//      (end of file)
-
+        // Integrate Stamped.io Reviews
+        var self = this;
+        if (typeof StampedFn !== 'undefined' && typeof StampedFn.loadBadges == 'function') {
+          StampedFn.loadBadges();
+        }
       	setTimeout(function(){
           let displayType = localStorage['displayType'] ? localStorage['displayType'] : 'grid';
           if (displayType == 'list') {
