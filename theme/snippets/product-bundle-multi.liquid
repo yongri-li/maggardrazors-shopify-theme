@@ -97,6 +97,8 @@
       <h2 class="product-bundle-title">
         {{ product.title }}
       </h2> 
+      <!-- Stamped - Begin Star Rating Badge --><span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{ product.id }}" data-product-sku="{{ product.handle }}" data-product-title="{{product.title}} data-product-type="{{product.type}}"" style="display: inline-block;">{{ product.metafields.stamped.badge }}</span><!-- Stamped - End Star Rating Badge -->
+      
       {% if product.metafields.global.minimum_price != blank %}
         <span class="bundle_minimum_price">From {{product.metafields.global.minimum_price}}</span>
       {% endif %}

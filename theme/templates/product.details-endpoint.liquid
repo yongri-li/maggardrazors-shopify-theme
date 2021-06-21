@@ -1,0 +1,48 @@
+{% comment %} Please don’t update this content {% endcomment %}
+
+{% layout none %}
+{
+  "product":
+    {
+      "id":{{ product.id }},
+      "metafields":[
+        
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_minimum_price = product.metafields.global["minimum_price"] %}
+              {% if v_minimum_price != blank %}
+                {
+                  "namespace": "global",
+                  "key": "minimum_price",
+                  "value": {{ v_minimum_price | json }}
+                },
+              {% endif %}
+        
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_hidden = product.metafields.seo["hidden"] %}
+              {% if v_hidden != blank %}
+                {
+                  "namespace": "seo",
+                  "key": "hidden",
+                  "value": {{ v_hidden | json }}
+                },
+              {% endif %}
+        
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_product_type = product.metafields.global["product_type"] %}
+              {% if v_product_type != blank %}
+                {
+                  "namespace": "global",
+                  "key": "product_type",
+                  "value": {{ v_product_type | json }}
+                },
+              {% endif %}
+        
+      ]
+    }
+}

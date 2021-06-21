@@ -26,7 +26,6 @@
  $(document).ready(function() {
   $(document).on('click', '.cart-custom_bundle-remove-link', function(e) { 
     e.preventDefault();
-    console.log("..................remove...............")
     var actions_group_id = $(this).data('bm-remove-ts');
     var line_items = [];
     $(this).closest('.cartitems--list').find('.cart-item').each(function(index) {
@@ -66,4 +65,47 @@
     location.href = '/cart'; 
   });
 
+  // $('.modal-content select.form-field-select').on('change', function() {
+  //   console.log("selected option ...", $(this).val())
+  // });
+
+  $(document).on('click', '.modal-content .product-form--atc-button', function(e) {
+    e.preventDefault();
+    var quantity = $(this).closest(".product-form--atc").find("#product-quantity-select").val();
+    var variant_id = $(this).closest('form').find('[name="id"]').val();
+    var variant_val = $(this).closest('form').find('.form-field-select-wrapper').find('select option:selected').val();    
+    $(this).closest('form').find('select:first').find('option').each(function() {
+      var matched_value = $(this).text().split("-")[0];
+      if(variant_val.trim() == matched_value.trim()) {
+        if($(this).attr("data-variant-id") != undefined) {
+          variant_id = $(this).attr("data-variant-id");
+        }        
+        return false; // breaks
+      }
+    })
+    
+    let formData = {
+      'items': []
+    };
+
+    formData.items.push({
+      'id':variant_id,
+      'quantity':parseInt(quantity, 0)            
+    });
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      location.href = "/cart";
+      //return response.json();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  })
  });

@@ -306,7 +306,7 @@
         </a>
       </h2>
 
-      {% if settings.product_show_vendor and product.vendor != blank %}
+      {% if settings.product_show_vendor and product.vendor != blank and product.vendor != '(Multiple)' %}
         <span class="productitem--vendor">
           {{ product_vendor | link_to_vendor }}
         </span>
@@ -317,19 +317,7 @@
       {% endunless %}
 
       {% if product_ratings_reviews and product_ratings_star_display == "all" %}
-        <div class="productitem--ratings">
-          <span class="shopify-product-reviews-badge" data-id="{{ product.id }}">
-            <span class="spr-badge">
-              <span class="spr-starrating spr-badge-starrating">
-                <i class="spr-icon spr-icon-star-empty"></i>
-                <i class="spr-icon spr-icon-star-empty"></i>
-                <i class="spr-icon spr-icon-star-empty"></i>
-                <i class="spr-icon spr-icon-star-empty"></i>
-                <i class="spr-icon spr-icon-star-empty"></i>
-              </span>
-            </span>
-          </span>
-        </div>
+        <!-- Stamped - Begin Star Rating Badge --><span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}" data-product-type="{{product.type}}" data-product-title="{{product.title}}"  style="display:block;">{{ product.metafields.stamped.badge }}</span><!-- Stamped - End Star Rating Badge -->
       {% endif %}
 
       {% if product_description %}
