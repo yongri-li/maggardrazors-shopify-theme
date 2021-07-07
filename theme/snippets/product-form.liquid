@@ -41,7 +41,9 @@
 
     
 {% if product.variants.first.inventory_quantity %}
-We currently have <strong>{{ product.variants.first.inventory_quantity }}</strong> in stock.
+  {% if product.variants.size == 1 %}
+    We currently have <strong>{{ product.variants.first.inventory_quantity }}</strong> in stock.
+  {% endif %}
 {% else %}
 Sold out!
 {% endif %}
