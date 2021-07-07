@@ -41,7 +41,9 @@
 
     
 {% if product.variants.first.inventory_quantity %}
+{%- comment -%}
 We currently have <strong>{{ product.variants.first.inventory_quantity }}</strong> in stock.
+{%- endcomment -%}
 {% else %}
 Sold out!
 {% endif %}
