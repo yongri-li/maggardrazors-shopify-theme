@@ -51,11 +51,11 @@
   
   $(document).on('click', '.cart-general-remove-link', function(e) { 
     e.preventDefault();
-     var item_varient_id = $(this).closest('.cart-item').data('cartitem-id');    
+     var line_id = $(this).data('line');    
      jQuery.ajax({
       type: 'POST',
       url: '/cart/change.js',
-      data: { id:item_varient_id, quantity: 0},
+      data: { line:line_id, quantity: 0},
       async: false,
       dataType: 'json',
       success: function() {          
