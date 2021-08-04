@@ -65,6 +65,12 @@
     location.href = '/cart'; 
   });
 
+  $(document).on('change', '.modal [data-product-option]', function(){
+    console.log($(this).val());
+    $('[data-variants] option[data-option-title="' + $(this).val() + '"]').attr('selected', 'selected');
+    $('[data-variants]').val($('[data-variants] option[data-option-title="' + $(this).val() + '"]').attr('value'));
+  });
+
   // $('.modal-content select.form-field-select').on('change', function() {
   //   console.log("selected option ...", $(this).val())
   // });

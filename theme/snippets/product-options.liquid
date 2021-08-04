@@ -39,6 +39,7 @@
       <option
         {% if variant.id == selected_variant.id %}selected="selected"{% endif %}
         data-variant-id="{{ variant.id }}"
+        data-option-title="{{ variant.option1 }}"
         {% if variant.available %}
           data-sku="{{ variant.sku }}"
           value="{{ variant.id }}"
