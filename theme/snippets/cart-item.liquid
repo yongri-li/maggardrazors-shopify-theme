@@ -238,6 +238,7 @@
           class="cart-item--remove-link {% if is_bundlemaster %} cart-custom_bundle-remove-link {% else %} cart-general-remove-link{% endif %} {% if is_bundleslave %} visually-hidden {% endif %}"
           data-cartitem-remove
           data-no-instant
+          data-line="{{ forloop.index }}"
           {% if is_bundlemaster %}data-bm-remove-ts="{{ bundle_ts }}"{% endif %}
           {% if is_bundleslave %}data-bs-remove-ts="{{ bundle_ts }}"{% endif %}
           aria-label="remove {{ item.product.title | escape }}"
