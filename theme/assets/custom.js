@@ -115,3 +115,7 @@
     });
   })
  });
+
+ $(document).on('change', '.shop-by-brand select', function(e){
+  document.location.href = $(this).find('option:selected').data('collection-url');
+ });

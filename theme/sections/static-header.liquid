@@ -182,6 +182,15 @@
           {% endif %}
         </div>
 
+        <div class="shop-by-brand">
+          <select>
+            {% assign brands_link = linklists['by-brands'] %}
+            {% for link in brands_link.links %}
+              <option data-collection-url="{{ link.url }}">{{ link.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
         {% if section.settings.small_promo_link != blank %}
           <a
             class="small-promo--link"
