@@ -189,7 +189,7 @@
                       {% if collection_bundle_item != blank %}
                       {% for product_item in collection_bundle_item.products %}
                         {% if product_item.available %}
-                          {% render 'product-bundle-item', product_item: product_item %}    
+                          {% render 'product-bundle-item', product_item: product_item, item_index: forloop.index %}    
                         {% endif %}                  
                       {% endfor %}
                       {% elsif product_bundle_item != blank %} 

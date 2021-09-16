@@ -149,7 +149,9 @@ jQuery(function() {
       ]
     };
 
-    $('.product_bundle_varient_selection').each(function() {
+    var index = 0;
+
+    $('.product_bundle_varient_selection').each(function() {        
         var discountPercent = $(this).data('discount-percent');
         var discountFixed = $(this).data('discount-fixed');
         var individual_quantity = $(this).data('product-quantity');
@@ -160,24 +162,28 @@ jQuery(function() {
           individual_product_quantity = 1;
         }
 
-        if(discountPercent != "") {
+        index ++;
+
+        if(discountPercent != "") {          
           formData.items.push({
             'id':$(this).data('product-variant-id'),
             'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {
               '_discount-percent': discountPercent,
               '_bundle_ts': timestamp,
+              '_bundle_id': index,
               '_bundle_slave': 'true',
               '_product_num':parseInt(individual_product_quantity, 0)
             }
           });    
-        } else if(discountFixed != "") {
+        } else if(discountFixed != "") {          
           formData.items.push({
             'id':$(this).data('product-variant-id'),
             'quantity':parseInt(quantity*individual_product_quantity, 0),
             "properties" : {
               '_discount-fixed': discountFixed*100,
               '_bundle_ts': timestamp,
+              '_bundle_id': index,
               '_bundle_slave': 'true',
               '_product_num':parseInt(individual_product_quantity, 0)
             }
@@ -189,12 +195,14 @@ jQuery(function() {
             "properties" : {              
               '_bundle_ts': timestamp,
               '_bundle_slave': 'true',
+              '_bundle_id': index,
               '_product_num':parseInt(individual_product_quantity, 0)
             }          
           });
         }
             
     });  
+
 
     fetch('/cart/add.js', {
       method: 'POST',
@@ -205,6 +213,7 @@ jQuery(function() {
     })
     .then(response => {
       location.href = "/cart";
+      // console.log(response);
       //return response.json();
     })
     .catch((error) => {
